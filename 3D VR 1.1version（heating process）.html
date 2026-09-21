@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Molecular Thermal Lab · 容器内分子热运动</title>
+<style>
+  body{margin:0;overflow:hidden;font-family:"Segoe UI",sans-serif;}
+  #panel{position:absolute;top:10px;left:10px;color:#e8eaed;
+    background:rgba(15,18,25,.75);padding:10px 14px;border-radius:10px;
+    font-size:12px;line-height:1.7;max-width:300px;}
+  #panel b{color:#ffb74d}
+  #grad{height:10px;border-radius:5px;margin:4px 0;
+    background:linear-gradient(90deg,#3b6fff,#7fd4ff,#ffd54f,#ff7043,#e53935);}
+</style>
+</head>
+<body>
+<div id="panel">
+  <b>分子热运动实验台</b><br>
+  旋转：左键拖拽 ｜ 缩放：滚轮 ｜ <b>双击画布移动热源</b><br>
+  加热处分子变红变快，冷处为蓝色
+  <div id="grad"></div>
+  <div style="display:flex;justify-content:space-between"><span>冷</span><span>热</span></div>
+  <div id="stats"></div>
+</div>
+
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+
+/* ================= 场景 ================= */
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d1017);
+const camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 100);
+camera.position.set(3.2, 2.6, 4.6);
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth, innerHeight);
+document.body.appendChild(renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.target.set(0,1,0);
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x334455, 1.0));
+const dl = new THREE.DirectionalLight(0xffffff, 1.3); dl.position.set(5,8,4); scene.add(dl);
+const grid = new THREE.GridHelper(10, 20, 0x334455, 0x1e2633); scene.add(grid);
+
+/* ================= 参数 ================= */
+const params = {
+  shape:'erlenmeyer', size:1.0,
+  count:350, molRadius:0.05,
+  T0:1.0, heatPower:4.0, heatSigma:0.6,
+  gravity:0.0, buoyancy:0.6, followMouse:false,
+  regenerate:()=>{ reseed(); }
+};
+
+/* 随机数 */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;
+  let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;
+  return((t^t>>>14)>>>0)/4294967296}}
+const rng = mulberry32(42);
+function gauss(){let u=0,v=0;while(!u)u=rng();while(!v)v=rng();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+
+/* ================= 容器形状 ================= */
+let containerMesh = null, D = {};          // D 存当前形状的尺寸参数
+const wallMat = new THREE.MeshPhysicalMaterial({ color:0xaed6ff, transparent:true,
+  opacity:0.14, roughness:0.05, metalness:0, side:THREE.DoubleSide, depthWrite:false });
+
+function buildContainer(){
+  if(containerMesh){ containerMesh.traverse(m=>{m.geometry?.dispose();}); scene.remove(containerMesh); }
+  const S = params.size; containerMesh = new THREE.Group();
+  const lathe = pts => new THREE.Mesh(new THREE.LatheGeometry(pts.map(p=>new THREE.Vector2(...p)),64), wallMat);
+
+  if(params.shape==='beaker'){
+    const R=1.1*S, H=2.2*S; D={R,H};
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(R,R,H,64,1,false), wallMat);
+    m.position.y=H/2; containerMesh.add(m);
+  }
+  else if(params.shape==='erlenmeyer'){
+    const Rb=1.3*S, Rn=0.32*S, Hc=1.6*S, Hn=0.9*S; D={Rb,Rn,Hc,Hn};
+    containerMesh.add(lathe([[0,0],[Rb,0],[Rn,Hc],[Rn,Hc+Hn],[Rn+0.05,Hc+Hn]]));
+  }
+  else if(params.shape==='roundbottom'){
+    const R=1.1*S, Rn=0.3*S;
+    const phiN=Math.asin(Rn/R), y0=R - R*Math.cos(phiN);
+    const Hn=0.9*S; D={R,Rn,y0,Hn};
+    const pts=[]; for(let i=0;i<=24;i++){const ph=phiN*i/24;
+      pts.push([R*Math.sin(ph), R - R*Math.cos(ph)]);}
+    pts.push([Rn,y0+Hn],[Rn+0.05,y0+Hn]);
+    containerMesh.add(lathe(pts));
+  }
+  else if(params.shape==='sphere'){
+    const R=1.15*S; D={R};
+    const m=new THREE.Mesh(new THREE.SphereGeometry(R,48,32), wallMat);
+    m.position.y=R; containerMesh.add(m);
+  }
+  else{ // cube
+    const a=1.1*S; D={a};
+    const m=new THREE.Mesh(new THREE.BoxGeometry(2*a,2*a,2*a), wallMat);
+    m.position.y=a; containerMesh.add(m);
+  }
+  scene.add(containerMesh);
+}
+
+/* 是否在容器内（用于播种分子） */
+function isInside(x,y,z,m){
+  const s=params.shape;
+  if(s==='beaker')     return x*x+z*z<(D.R-m)**2 && y>m && y<D.H-m;
+  if(s==='erlenmeyer') return y>D.Hc ? (x*x+z*z<(D.Rn-m)**2 && y<D.Hc+D.Hn-m)
+        : (x*x+z*z<(THREE.MathUtils.lerp(D.Rb,D.Rn,y/D.Hc)-m)**2 && y>m);
+  if(s==='roundbottom')return y>D.y0 ? (x*x+z*z<(D.Rn-m)**2 && y<D.y0+D.Hn-m)
+        : (x*x+(y-D.R)**2+z*z<(D.R-m)**2);
+  if(s==='sphere')     return x*x+(y-D.R)**2+z*z<(D.R-m)**2;
+  return Math.abs(x)<D.a-m && Math.abs(z)<D.a-m && y>m && y<2*D.a-m; // cube
+}
+
+/* 撞墙约束：越界拉回 + 反弹（rest=恢复系数） */
+const rest=0.85;
+function reflect(i,nx,ny,nz){
+  const vn=vx[i]*nx+vy[i]*ny+vz[i]*nz;
+  if(vn>0){ vx[i]-=(1+rest)*vn*nx; vy[i]-=(1+rest)*vn*ny; vz[i]-=(1+rest)*vn*nz; }
+}
+function constrain(i){
+  const m=params.molRadius; let x=px[i],y=py[i],z=pz[i];
+  const s=params.shape;
+  if(y<m){ py[i]=m; if(vy[i]<0)vy[i]*=-rest; y=m; }
+  if(s==='sphere'){
+    const dy=y-D.R,d=Math.hypot(x,dy,z),lim=D.R-m;
+    if(d>lim){const nx=x/d,ny=dy/d,nz=z/d;
+      px[i]=nx*lim;py[i]=D.R+ny*lim;pz[i]=nz*lim;reflect(i,nx,ny,nz);}
+  }else if(s==='cube'){
+    const a=D.a-m;
+    if(x> a){px[i]= a;reflect(i,-1,0,0);} if(x<-a){px[i]=-a;reflect(i,1,0,0);}
+    if(z> a){pz[i]= a;reflect(i,0,0,-1);} if(z<-a){pz[i]=-a;reflect(i,0,0,1);}
+    if(y>2*a){py[i]=2*a;reflect(i,0,-1,0);}
+  }else{
+    // 有颈部/锥面的容器：先处理上部（颈），再处理下部
+    let inNeck=false, Rc=D.Rn, yTop;
+    if(s==='beaker'){ Rc=D.R; yTop=D.H; inNeck=true; }
+    else if(s==='erlenmeyer'){ inNeck=y>D.Hc; yTop=D.Hc+D.Hn; }
+    else { inNeck=y>D.y0; yTop=D.y0+D.Hn; }
+    const rad=Math.hypot(x,z);
+    if(inNeck){
+      const lim=Rc-m;
+      if(rad>lim){const nx=x/rad,nz=z/rad;
+        px[i]=nx*lim;pz[i]=nz*lim;reflect(i,nx,0,nz);}
+      if(y>yTop-m){py[i]=yTop-m;reflect(i,0,-1,0);}
+    }else if(s==='erlenmeyer'){
+      const lim=THREE.MathUtils.lerp(D.Rb,D.Rn,y/D.Hc)-m;
+      if(rad>lim){ // 锥面法线
+        let gx=x/rad, gy=(D.Rb-D.Rn)/D.Hc, gz=z/rad;
+        const gl=Math.hypot(gx,gy,gz); gx/=gl;gy/=gl;gz/=gl;
+        px[i]-=gx*(rad-lim); pz[i]-=gz*(rad-lim);
+        reflect(i,gx,gy,gz);
+      }
+    }else if(s==='roundbottom'){
+      const dy=y-D.R,d=Math.hypot(x,dy,z),lim=D.R-m;
+      if(d>lim){const nx=x/d,ny=dy/d,nz=z/d;
+        px[i]=nx*lim;py[i]=D.R+ny*lim;pz[i]=nz*lim;reflect(i,nx,ny,nz);}
+    }
+  }
+}
+
+/* ================= 热源 ================= */
+const heater = new THREE.Vector3(1.3, 0, 0);
+const heatBall = new THREE.Mesh(new THREE.SphereGeometry(0.09,16,12),
+  new THREE.MeshBasicMaterial({color:0xff5522}));
+scene.add(heatBall);
+const heatHalo = new THREE.Mesh(new THREE.SphereGeometry(1,24,18),
+  new THREE.MeshBasicMaterial({color:0xff7733,transparent:true,opacity:0.10,depthWrite:false}));
+scene.add(heatHalo);
+const heatLight = new THREE.PointLight(0xff6622, 20, 6); scene.add(heatLight);
+
+function temperature(x,y,z){
+  const d2=(x-heater.x)**2+(y-heater.y)**2+(z-heater.z)**2;
+  return params.T0 + params.heatPower*Math.exp(-d2/(2*params.heatSigma**2));
+}
+
+/* 鼠标移动热源 */
+const raycaster=new THREE.Raycaster(), ndc=new THREE.Vector2(),
+      groundPlane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
+function moveHeater(e){
+  ndc.x=e.clientX/innerWidth*2-1; ndc.y=-(e.clientY/innerHeight)*2+1;
+  raycaster.setFromCamera(ndc,camera);
+  const hit=new THREE.Vector3();
+  if(raycaster.ray.intersectPlane(groundPlane,hit)){
+    if(hit.length()>3)hit.setLength(3);
+    heater.copy(hit);
+  }
+}
+renderer.domElement.addEventListener('dblclick',moveHeater);
+renderer.domElement.addEventListener('pointermove',e=>{ if(params.followMouse) moveHeater(e); });
+
+/* ================= 分子系统 ================= */
+const MAXN=800;
+const px=new Float32Array(MAXN),py=new Float32Array(MAXN),pz=new Float32Array(MAXN),
+      vx=new Float32Array(MAXN),vy=new Float32Array(MAXN),vz=new Float32Array(MAXN);
+let n=params.count;
+
+const molGeo=new THREE.SphereGeometry(1,10,8);
+const molMat=new THREE.MeshStandardMaterial({roughness:0.35});
+const molMesh=new THREE.InstancedMesh(molGeo,molMat,MAXN);
+scene.add(molMesh);
+const dummy=new THREE.Object3D(), col=new THREE.Color();
+
+function reseed(){
+  n=params.count;
+  const R=1.7*params.size;
+  for(let i=0;i<n;i++){
+    let ok=false;
+    for(let t=0;t<80&&!ok;t++){
+      const x=(rng()*2-1)*R, y=rng()*3*params.size, z=(rng()*2-1)*R;
+      if(isInside(x,y,z,params.molRadius)){
+        px[i]=x;py[i]=y;pz[i]=z;
+        vx[i]=(rng()-.5);vy[i]=(rng()-.5);vz[i]=(rng()-.5);
+        ok=true;
+      }
+    }
+    if(!ok){px[i]=0;py[i]=0.3;pz[i]=0;vx[i]=vy[i]=vz[i]=0;}
+  }
+}
+
+/* ================= 物理更新 ================= */
+function physics(dt){
+  const kick=1.6, relax=0.10, speedK=1.15;
+  for(let i=0;i<n;i++){
+    const T=temperature(px[i],py[i],pz[i]);
+    const target=Math.sqrt(T)*speedK;
+    // ① 随机热踢
+    vx[i]+=gauss()*kick*Math.sqrt(T)*Math.sqrt(dt);
+    vy[i]+=gauss()*kick*Math.sqrt(T)*Math.sqrt(dt);
+    vz[i]+=gauss()*kick*Math.sqrt(T)*Math.sqrt(dt);
+    // ② 速率松弛到当地温度对应的目标速率（恒温器）
+    const sp=Math.hypot(vx[i],vy[i],vz[i])||1e-6;
+    const f=1+(target/sp-1)*relax;
+    vx[i]*=f;vy[i]*=f;vz[i]*=f;
+    // ③ 浮力（热对流）与重力
+    vy[i]+=params.buoyancy*(T-params.T0)*dt*0.5;
+    vy[i]-=params.gravity*dt;
+    // ④ 移动
+    px[i]+=vx[i]*dt;py[i]+=vy[i]*dt;pz[i]+=vz[i]*dt;
+  }
+  // ⑤ 分子间碰撞（等质量弹性）
+  const min=2*params.molRadius,min2=min*min;
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
+    const dx=px[j]-px[i],dy=py[j]-py[i],dz=pz[j]-pz[i];
+    const d2=dx*dx+dy*dy+dz*dz;
+    if(d2<min2&&d2>1e-9){
+      const d=Math.sqrt(d2),nx=dx/d,ny=dy/d,nz=dz/d,ov=(min-d)*0.5;
+      px[i]-=nx*ov;py[i]-=ny*ov;pz[i]-=nz*ov;
+      px[j]+=nx*ov;py[j]+=ny*ov;pz[j]+=nz*ov;
+      const rvn=(vx[j]-vx[i])*nx+(vy[j]-vy[i])*ny+(vz[j]-vz[i])*nz;
+      if(rvn<0){const imp=rvn*0.95;
+        vx[i]+=imp*nx;vy[i]+=imp*ny;vz[i]+=imp*nz;
+        vx[j]-=imp*nx;vy[j]-=imp*ny;vz[j]-=imp*nz;}
+    }
+  }
+  // ⑥ 撞墙
+  for(let i=0;i<n;i++) constrain(i);
+}
+
+/* ================= 渲染 ================= */
+const clock=new THREE.Clock(); let frame=0;
+function animate(){
+  requestAnimationFrame(animate);
+  const dt=Math.min(clock.getDelta(),0.033);
+  physics(dt);
+
+  const r=params.molRadius, Tmax=params.T0+params.heatPower;
+  let sumSp=0;
+  for(let i=0;i<n;i++){
+    dummy.position.set(px[i],py[i],pz[i]);
+    dummy.scale.setScalar(r);
+    dummy.updateMatrix();
+    molMesh.setMatrixAt(i,dummy.matrix);
+    const T=temperature(px[i],py[i],pz[i]);
+    const t=Math.min(Math.max((T-params.T0)/Math.max(params.heatPower,0.01),0),1);
+    col.setHSL(0.66*(1-t),0.9,0.55);      // 蓝 → 红
+    molMesh.setColorAt(i,col);
+    sumSp+=Math.hypot(vx[i],vy[i],vz[i]);
+  }
+  molMesh.count=n;
+  molMesh.instanceMatrix.needsUpdate=true;
+  if(molMesh.instanceColor) molMesh.instanceColor.needsUpdate=true;
+
+  // 热源视觉
+  heatBall.position.copy(heater);
+  heatHalo.position.copy(heater);
+  heatHalo.scale.setScalar(params.heatSigma*1.6);
+  heatHalo.visible=heatBall.visible=params.heatPower>0.05;
+  heatLight.position.copy(heater).y+=0.25;
+  heatLight.intensity=params.heatPower*6;
+
+  if(frame++%15===0){
+    document.getElementById('stats').innerHTML=
+      `基础温度 <b>${params.T0.toFixed(1)}</b> ｜ 热源处 <b>${Tmax.toFixed(1)}</b>`+
+      ` ｜ 平均速率 <b>${(sumSp/n).toFixed(2)}</b>`;
+  }
+  controls.update();
+  renderer.render(scene,camera);
+}
+
+/* ================= GUI ================= */
+const gui=new GUI({title:'Molecular Thermal Lab'});
+const f1=gui.addFolder('容器');
+f1.add(params,'shape',{烧杯:'beaker',锥形瓶:'erlenmeyer',圆底烧瓶:'roundbottom',球形:'sphere',方盒:'cube'})
+  .name('形状').onChange(()=>{buildContainer();reseed();});
+f1.add(params,'size',0.7,1.5,0.05).name('大小').onChange(()=>{buildContainer();reseed();});
+const f2=gui.addFolder('分子');
+f2.add(params,'count',50,800,10).name('数量').onFinishChange(reseed);
+f2.add(params,'molRadius',0.03,0.09,0.005).name('半径');
+const f3=gui.addFolder('热源（双击画布可移动）');
+f3.add(params,'heatPower',0,6,0.1).name('加热功率');
+f3.add(params,'heatSigma',0.3,1.5,0.05).name('加热范围 σ');
+f3.add(params,'followMouse').name('鼠标拖拽热源')
+  .onChange(v=>controls.enableRotate=!v);
+const f4=gui.addFolder('物理');
+f4.add(params,'T0',0.2,3,0.1).name('环境温度 T₀');
+f4.add(params,'gravity',0,4,0.1).name('重力');
+f4.add(params,'buoyancy',0,2,0.1).name('浮力/对流');
+f4.add(params,'regenerate').name('🎲 重新撒分子');
+
+addEventListener('resize',()=>{
+  camera.aspect=innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+});
+
+buildContainer(); reseed(); animate();
+</script>
+</body>
+</html>

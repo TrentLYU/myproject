@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# DeepWorks / opencode 会话与工具目录（不属于网站内容）
+.deepworks/
+.opencode/
+
+# 原始照片上传包（网站成品照片统一在 travel/）
+uploads/
