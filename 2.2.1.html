@@ -1348,14 +1348,9 @@
         </div>
         <div class="timeline">
             <div class="timeline__item">
-                <span class="timeline__period" data-i18n="edu.periodUni">本科 · 在读</span>
-                <h3 class="timeline__title" data-i18n="edu.uniName">天津大学香港理工大学深圳未来技术学院</h3>
-                <p class="timeline__desc" data-i18n="edu.uniDesc">计算机科学与技术专业 · 广东深圳</p>
-            </div>
-            <div class="timeline__item">
-                <span class="timeline__period" data-i18n="edu.periodHigh">高中</span>
-                <h3 class="timeline__title" data-i18n="edu.highName">山西大学附属中学</h3>
-                <p class="timeline__desc" data-i18n="edu.highDesc">山西太原</p>
+                <span class="timeline__period" data-i18n="edu.periodPrimary">小学</span>
+                <h3 class="timeline__title" data-i18n="edu.primaryName">九一小学</h3>
+                <p class="timeline__desc" data-i18n="edu.primaryDesc">山西太原</p>
             </div>
             <div class="timeline__item">
                 <span class="timeline__period" data-i18n="edu.periodMiddle">初中</span>
@@ -1363,9 +1358,14 @@
                 <p class="timeline__desc" data-i18n="edu.middleDesc">山西太原</p>
             </div>
             <div class="timeline__item">
-                <span class="timeline__period" data-i18n="edu.periodPrimary">小学</span>
-                <h3 class="timeline__title" data-i18n="edu.primaryName">九一小学</h3>
-                <p class="timeline__desc" data-i18n="edu.primaryDesc">山西太原</p>
+                <span class="timeline__period" data-i18n="edu.periodHigh">高中</span>
+                <h3 class="timeline__title" data-i18n="edu.highName">山西大学附属中学</h3>
+                <p class="timeline__desc" data-i18n="edu.highDesc">山西太原</p>
+            </div>
+            <div class="timeline__item">
+                <span class="timeline__period" data-i18n="edu.periodUni">本科 · 在读</span>
+                <h3 class="timeline__title" data-i18n="edu.uniName">天津大学香港理工大学深圳未来技术学院</h3>
+                <p class="timeline__desc" data-i18n="edu.uniDesc">计算机科学与技术专业 · 广东深圳</p>
             </div>
         </div>
     </section>
@@ -1501,7 +1501,7 @@
                 <div class="skill__category">
                     <h4 class="skill__category-title" data-i18n="skills.catLang">🌍 语言能力</h4>
                     <div class="skill__tags">
-                        <span class="skill__tag clickable" id="ieltsTag" data-i18n="skills.ielts">🇬 雅思 IELTS 7.0</span>
+                        <span class="skill__tag clickable" id="ieltsTag" data-i18n="skills.ielts">🇬🇧 雅思 IELTS 7.0</span>
                         <span class="skill__tag" data-i18n="skills.chinese">中文母语</span>
                     </div>
                 </div>
@@ -1922,7 +1922,7 @@
 
             function updateUI() {
                 musicTitle.textContent = songNames[currentIndex];
-                playPauseBtn.textContent = isPlaying ? '' : '▶';
+                playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
                 if (isPlaying) {
                     musicIcon.classList.add('playing');
                     musicStatus.textContent = T('music.playing');
