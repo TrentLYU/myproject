@@ -1,7 +1,7 @@
 /* 三语字典：由 .deepworks/tmp/i18n-build/build.cjs 生成（zh/en 手维护，tw 由 opencc 自动转换并已人工校对）*/
 window.I18N_DICT = {
     "zh": {
-        "siteTitle": "律照楠 | 个人主页",
+        "siteTitle": "Trent Lyu | 个人主页",
         "brand": "律照楠",
         "nav.toggle": "打开菜单",
         "nav.about": "关于我",
@@ -207,8 +207,8 @@ window.I18N_DICT = {
         "travel.video": "视频"
     },
     "en": {
-        "siteTitle": "Lü Zhaonan | Personal Homepage",
-        "brand": "Lü Zhaonan",
+        "siteTitle": "Trent Lyu | Personal Homepage",
+        "brand": "Trent Lyu",
         "nav.toggle": "Toggle menu",
         "nav.about": "About",
         "nav.education": "Education",
@@ -584,7 +584,7 @@ window.I18N_DICT = {
         "proj.title": "專案 / 作品集",
         "proj.vr11Desc": "加熱過程的 3D VR 視覺化演示。展示分離過程中熱力學變化的三維動態效果，是 1.0 版本的迭代升級。",
         "proj.vrProDesc": "AI for Separation 專案的 3D VR 視覺化成果（Pro 版本）。支援互動式三維瀏覽，展示分離過程的空間結構。",
-        "siteTitle": "律照楠 | 個人主頁",
+        "siteTitle": "Trent Lyu | 個人主頁",
         "skills.aiFlow": "AI 工具流",
         "skills.calli": "✍️ 書法 · 8級",
         "skills.catArt": "🎨 藝術考級",

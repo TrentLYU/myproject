@@ -5,6 +5,18 @@
 
 ---
 
+## 导航顺序修正 + 网站更名 — 2026-09-24 第三次提交（版本号维持 2.2.1）
+
+**导航目录顺序**
+- 「📚 演进史」从导航末尾移至「项目」与「Trent Intelligence」之间，导航目录顺序与页面区块顺序（项目 → 演进史横幅 → 分身）完全一致。
+
+**网站更名：律照楠 | Personal Homepage → Trent Lyu | Personal Homepage**
+- 浏览器标签标题：i18n `siteTitle` × 3 语言（zh "Trent Lyu | 个人主页" / en "Trent Lyu | Personal Homepage" / tw "Trent Lyu | 個人主頁"），随语言切换实时生效；静态 `<title>` 同步更新（2.2.1.html / index.html / history/index.html）。
+- 导航品牌：英文界面 "Lü Zhaonan" → "Trent Lyu"，与站内 Trent Intelligence 数字分身品牌统一；中文界面品牌保留"律照楠"。
+- 仓库名 myproject 不变（URL 保持 trentlyu.github.io/myproject）。
+
+---
+
 ## 演进史入口强化 + iframe 修复 — 2026-09-24 第二次提交（版本号维持 2.2.1）
 
 **主站演进史展示横幅（项目区 ↔ Trent Intelligence 之间）**
