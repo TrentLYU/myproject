@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>网站演进史 | 律照楠 Personal Homepage</title>
+<style>
+:root{
+  --primary:#0066CC;--primary-deep:#004A99;--bg:#f5f7fa;--card:#ffffff;
+  --text:#1d1d1f;--text-2:#555;--text-3:#999;--line:#e8e8ed;--accent:#34c759;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* ===== Hero ===== */
+.hero{background:linear-gradient(135deg,#003d7d 0%,#0066CC 55%,#00a0e9 100%);color:#fff;padding:64px 0 56px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.08)}
+.hero::before{content:"";position:absolute;left:-80px;bottom:-160px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.06)}
+.hero h1{font-size:2.4rem;letter-spacing:1px;margin-bottom:10px}
+.hero p{opacity:.92;font-size:1.05rem;max-width:720px}
+.stats{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px;position:relative;z-index:1}
+.stat{background:rgba(255,255,255,.14);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:12px 22px;min-width:130px}
+.stat b{display:block;font-size:1.5rem;font-weight:700}
+.stat span{font-size:.8rem;opacity:.85}
+.back-home{display:inline-flex;align-items:center;gap:8px;margin-top:26px;background:#fff;color:var(--primary-deep);font-weight:600;padding:11px 22px;border-radius:100px;transition:transform .2s,box-shadow .2s}
+.back-home:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2);text-decoration:none}
+
+/* ===== 当前版本条 ===== */
+.now-bar{background:linear-gradient(90deg,#e8f6ee,#f0f9ff);border:1px solid #cde9d8;border-radius:16px;padding:16px 22px;margin:-30px auto 8px;max-width:1040px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;box-shadow:0 6px 24px rgba(0,0,0,.05)}
+.now-bar .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(52,199,89,.2);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(52,199,89,.2)}50%{box-shadow:0 0 0 8px rgba(52,199,89,.08)}} 
+.now-bar b{font-size:1.05rem}
+.now-bar .go{margin-left:auto;background:var(--primary);color:#fff;padding:8px 18px;border-radius:100px;font-size:.9rem;font-weight:600}
+.now-bar .go:hover{background:var(--primary-deep);text-decoration:none}
+
+/* ===== 代级 Section ===== */
+.gen{padding:44px 0 8px}
+.gen-head{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+.gen-num{font-size:3rem;font-weight:800;color:transparent;-webkit-text-stroke:1.6px var(--primary);line-height:1}
+.gen-title{font-size:1.5rem;font-weight:700}
+.gen-era{color:var(--text-3);font-size:.9rem}
+.gen-summary{background:var(--card);border-radius:16px;padding:20px 24px;margin:14px 0 20px;box-shadow:0 2px 12px rgba(0,0,0,.04);border-left:4px solid var(--primary)}
+.gen-summary h3{font-size:1rem;margin-bottom:8px;color:var(--primary-deep)}
+.gen-summary ul{padding-left:20px}
+.gen-summary li{margin:4px 0;font-size:.93rem;color:var(--text-2)}
+
+/* ===== 版本卡片 ===== */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:10px}
+.card{background:var(--card);border-radius:16px;padding:20px 22px;box-shadow:0 2px 10px rgba(0,0,0,.05);display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s;border:1px solid transparent}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,102,204,.12);border-color:#d5e6f7}
+.card-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ver{font-size:1.15rem;font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--primary-deep)}
+.badge{font-size:.7rem;font-weight:600;padding:2.5px 9px;border-radius:100px;background:#eef4fb;color:var(--primary)}
+.badge.milestone{background:#fff3e0;color:#e07b00}
+.badge.final{background:#e8f6ee;color:#1e8e3e}
+.size{margin-left:auto;color:var(--text-3);font-size:.78rem}
+.date{color:var(--text-3);font-size:.8rem;margin-bottom:8px}
+.pts{padding-left:18px;flex:1}
+.pts li{font-size:.88rem;color:var(--text-2);margin:3.5px 0}
+.links{display:flex;gap:10px;margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.links a{flex:1;text-align:center;padding:8px 0;border-radius:10px;font-size:.86rem;font-weight:600;border:1px solid var(--primary);color:var(--primary)}
+.links a:hover{background:var(--primary);color:#fff;text-decoration:none}
+.links a.src{border-color:var(--line);color:var(--text-2);background:#fafafa}
+.links a.src:hover{border-color:var(--text-2);color:#fff;background:var(--text-2)}
+
+/* ===== 史前 & 页脚 ===== */
+.proto{padding:40px 0 6px}
+.note{background:#fffbe8;border:1px solid #f5e6a8;border-radius:14px;padding:16px 20px;margin:18px 0;font-size:.88rem;color:#7a6410}
+.note b{color:#5d4d00}
+footer{margin-top:48px;padding:34px 0 44px;background:#1d1d1f;color:#aaa;text-align:center;font-size:.88rem}
+footer a{color:#6db3ff}
+@media (max-width:640px){
+  .hero h1{font-size:1.7rem}
+  .gen-num{font-size:2.2rem}
+  .stat{min-width:calc(50% - 14px)}
+  .now-bar .go{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>📚 网站演进史</h1>
+    <p>从千问 AI 生成的 84KB 原型，到 160KB 的三语·三端·云端个人主页——<br>9 天，4 代，23 个可访问的归档版本，每一步都留档可查。</p>
+    <div class="stats">
+      <div class="stat"><b>4</b><span>大版本代际</span></div>
+      <div class="stat"><b>23</b><span>归档版本</span></div>
+      <div class="stat"><b>9 天</b><span>09-16 → 09-24</span></div>
+      <div class="stat"><b>3.8×</b><span>代码量 42KB→160KB</span></div>
+      <div class="stat"><b>33 地</b><span>旅行足迹 · 137 张照片</span></div>
+    </div>
+    <a class="back-home" href="../2.2.1.html">🚀 返回最新版 v2.2.1</a>
+  </div>
+</header>
+
+<div class="now-bar">
+  <span class="dot"></span>
+  <b>当前线上版本：v2.2.1（第四代 · 全端体验）</b>
+  <span style="color:var(--text-3);font-size:.85rem">简/繁/英三语 · 3D 旅行地球 · Trent AI 分身 · 云端反馈墙</span>
+  <a class="go" href="../2.2.1.html">访问主站 →</a>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ 史前 ============ -->
+  <section class="proto">
+    <div class="gen-head">
+      <span class="gen-num">0</span>
+      <h2 class="gen-title">史前 · AI 原型</h2>
+      <span class="gen-era">2026-09-16 · 与千问结对</span>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-top"><span class="ver">v0 原型</span><span class="badge">起点</span><span class="size">84KB</span></div>
+        <div class="date">2026-09-16 · 千问代码_html_20260916.html</div>
+        <ul class="pts">
+          <li>与通义千问结对生成的<b>第一个完整页面</b>，从 0 到 1</li>
+          <li>八大模块框架一次立起：关于我 / 教育 / 项目 / 数字分身 / 技能证书 / 兴趣性格 / 互动 / 联系</li>
+          <li>已塞进 DeepSeek 聊天、Verlet 物理幕布、音乐播放器、滑雪小游戏等全部设想</li>
+          <li>意义：把"想要什么"全部铺开，为第一代手工重构提供蓝图</li>
+        </ul>
+        <div class="links"><a href="v0-prototype.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v0-prototype.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v0 测试页</span><span class="badge">工程彩蛋</span><span class="size">1KB</span></div>
+        <div class="date">史前 · test.html</div>
+        <ul class="pts">
+          <li>图片路径调试页：Arnold / Russell / Djokovic / 石宇奇 四张球星图逐一验证加载</li>
+          <li>绿色 = 找到了，红色 = 没找到——最朴素的工程初心</li>
+        </ul>
+        <div class="links"><a href="v0-test.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v0-test.html" target="_blank">源码</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 第一代 ============ -->
+  <section class="gen">
+    <div class="gen-head">
+      <span class="gen-num">I</span>
+      <h2 class="gen-title">第一代 · 奠基</h2>
+      <span class="gen-era">1.2.x · 2026-09-16 ~ 09-17 · 6 个小版本</span>
+    </div>
+    <div class="gen-summary">
+      <h3>🏗 代际进步总结 —— 从 AI 生成到手工掌控</h3>
+      <ul>
+        <li><b>手工重构</b>：对 AI 原型"删 1079 行、重写 469 行"，42~52KB 的精简内核，每一行都看得懂、改得动</li>
+        <li><b>设计系统确立</b>：CSS 变量体系、卡片布局、btn--primary/ghost 按钮语言、cubic-bezier 弹性动画——后续所有版本的视觉地基</li>
+        <li><b>交互体系建立</b>：modal-overlay 弹窗系统 + 动画入场，从此所有详情展示有了统一容器</li>
+        <li><b>结构收敛</b>：八大模块收敛为清爽的六大板块，信息密度首次做减法</li>
+      </ul>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-top"><span class="ver">v1.2</span><span class="badge milestone">起点</span><span class="size">52KB</span></div>
+        <div class="date">≈09-16 · 手工重构第一版</div>
+        <ul class="pts">
+          <li>告别 AI 生成代码，手工重写全部结构与样式</li>
+          <li>六大模块结构定型：关于我 / 教育 / 项目 / 分身 / 技能兴趣 / 互动联系</li>
+        </ul>
+        <div class="links"><a href="v1.2.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v1.2.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v1.2.1</span><span class="size">42KB</span></div>
+        <div class="date">≈09-16 · 样式精修</div>
+        <ul class="pts">
+          <li>全系列<b>最小体积</b>（42KB）：样式深度精简压缩</li>
+          <li>首屏排版打磨：副标题、按钮、卡片间距统一</li>
+        </ul>
+        <div class="links"><a href="v1.2.1.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v1.2.1.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v1.2.2</span><span class="size">46KB</span></div>
+        <div class="date">≈09-16 · 弹窗 + 球星卡</div>
+        <ul class="pts">
+          <li>新增 <b>modal-overlay 弹窗系统</b>（缩放+位移入场动画）</li>
+          <li>利物浦球星卡片上线——足球热情首次入场</li>
+        </ul>
+        <div class="links"><a href="v1.2.2.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v1.2.2.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v1.2.3</span><span class="size">47KB</span></div>
+        <div class="date">≈09-17 · 项目 PDF 直链</div>
+        <ul class="pts">
+          <li>项目区接入 <b>AI4s-PVC 论文 PDF 直链</b>（9.6MB 原始论文）</li>
+          <li>chip 标签体系上线（专业/技能标签化展示）</li>
+        </ul>
+        <div class="links"><a href="v1.2.3.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v1.2.3.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v1.2.3pro</span><span class="size">52KB</span></div>
+        <div class="date">≈09-17 · 运动明星扩展</div>
+        <ul class="pts">
+          <li>运动卡片扩展：<b>Russell / Djokovic / 石宇奇</b> 球星卡加入</li>
+          <li>卡片配色随球队主题（利物浦红 / 塞尔维亚蓝 / 中国红）</li>
+        </ul>
+        <div class="links"><a href="v1.2.3pro.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v1.2.3pro.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v1.2.3Max</span><span class="badge final">一代收官</span><span class="size">52KB</span></div>
+        <div class="date">≈09-17 · 懒加载优化</div>
+        <ul class="pts">
+          <li>图片<b>懒加载</b>：new Image() 预检 + 按需加载，长页面更流畅</li>
+          <li>第一代内容最全版本，为第二代蓄力</li>
+        </ul>
+        <div class="links"><a href="v1.2.3Max.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v1.2.3Max.html" target="_blank">源码</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 第二代 ============ -->
+  <section class="gen">
+    <div class="gen-head">
+      <span class="gen-num">II</span>
+      <h2 class="gen-title">第二代 · 互动</h2>
+      <span class="gen-era">1.3.x · 2026-09-17 ~ 09-18 · 5 个小版本</span>
+    </div>
+    <div class="gen-summary">
+      <h3>🎵 代际进步总结 —— 从"名片"到"可玩"</h3>
+      <ul>
+        <li><b>多媒体入场</b>：音乐播放器（3 次迭代定型）、证书弹窗、3D VR 内嵌——页面开始"有声有色"</li>
+        <li><b>音乐播放器从无到定型</b>：浮动播放条 → 完整交互（上/下一首、状态同步）→ 最终形态</li>
+        <li><b>证书数字化</b>：雅思 7.0 / 竹笛十级 / 漫画九级三证从静态文字升级为可点击放大展示</li>
+        <li><b>项目可交互</b>：3D VR 可视化首次通过 iframe 内嵌进项目区，访客可现场拖动</li>
+      </ul>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-top"><span class="ver">v1.3.1</span><span class="badge milestone">二代起点</span><span class="size">60KB</span></div>
+        <div class="date">≈09-17 · 音乐回归</div>
+        <ul class="pts">
+          <li><b>音乐播放器正式回归</b>：FM1 / FM2 双曲浮动播放条</li>
+          <li>播放/暂停/切歌按钮体系初步建立</li>
+        </ul>
+        <div class="links"><a href="v1.3.1.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v1.3.1.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v1.3.2</span><span class="size">70KB</span></div>
+        <div class="date">≈09-17 · 播放器完善</div>
+        <ul class="pts">
+          <li>播放器交互完善：上一首 / 下一首 / 播放状态实时同步</li>
+          <li>全站版面重构，卡片体系升级</li>
+        </ul>
+        <div class="links"><a href="v1.3.2.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v1.3.2.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v1.3.3</span><span class="size">74KB</span></div>
+        <div class="date">≈09-18 · 证书弹窗</div>
+        <ul class="pts">
+          <li><b>证书弹窗系统</b>：雅思 / 竹笛 / 漫画三证可点击放大</li>
+          <li>cert-modal 专属样式，证书展示居中大气</li>
+        </ul>
+        <div class="links"><a href="v1.3.3.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v1.3.3.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v1.3.3pro</span><span class="size">74KB</span></div>
+        <div class="date">≈09-18 · 3D VR 内嵌</div>
+        <ul class="pts">
+          <li>项目区内嵌 <b>3D VR iframe</b>：可视化项目现场可交互</li>
+          <li>深色主题变体探索</li>
+        </ul>
+        <div class="links"><a href="v1.3.3pro.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v1.3.3pro.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v1.3.4</span><span class="badge final">二代收官</span><span class="size">81KB</span></div>
+        <div class="date">≈09-18 · 定型打磨</div>
+        <ul class="pts">
+          <li>音乐播放器<b>最终形态定型</b>（沿用至今的布局）</li>
+          <li>整体细节打磨，二代功能全家桶收官</li>
+        </ul>
+        <div class="links"><a href="v1.3.4.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v1.3.4.html" target="_blank">源码</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 第三代 ============ -->
+  <section class="gen">
+    <div class="gen-head">
+      <span class="gen-num">III</span>
+      <h2 class="gen-title">第三代 · 智能与内容</h2>
+      <span class="gen-era">2.1.x · 2026-09-18 ~ 09-20 · 9 个小版本（5 个里程碑）</span>
+    </div>
+    <div class="gen-summary">
+      <h3>🤖 代际进步总结 —— 安全、智能、内容、国际化四线并进</h3>
+      <ul>
+        <li><b>安全进化</b>：DeepSeek API Key 从硬编码明文 → 🔑 弹窗设置 + localStorage 浏览器加密存储，密钥永不上传</li>
+        <li><b>智能化</b>：Trent 数字分身四步进化——悬浮跟随 → 问答弹窗 → Apple Intelligence 图标 → 知识库外挂（28 条个人知识，改数据不动代码）</li>
+        <li><b>内容爆发</b>：3D 旅行地图地球（Canvas 正交投影 / 8772 陆地点阵 / 惯性拖转 / 6 倍缩放），地点 2 → 33、照片 0 → 137、视频 1，足迹跨 4 大洲</li>
+        <li><b>国际化</b>：全站简/繁/英三语实时切换（193 键 × 3 字典 + 知识库三语 + 首访语言选择）</li>
+        <li><b>反馈闭环</b>：五星评分反馈墙（XSS 防护 / 匿名发布 / 公示墙）</li>
+        <li><b>工程制度</b>：CHANGELOG 版本日志制度建立，每版必有记录与仿真验证</li>
+      </ul>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-top"><span class="ver">v2.1.1</span><span class="badge milestone">安全升级</span><span class="size">95KB</span></div>
+        <div class="date">≈09-18 · API Key 安全化</div>
+        <ul class="pts">
+          <li><b>API Key 从代码里搬进 localStorage</b>：🔑 弹窗设置，告别硬编码泄露风险</li>
+          <li>项目区结构整理，容量首次逼近 100KB</li>
+        </ul>
+        <div class="links"><a href="v2.1.1.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v2.1.1.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v2.1.2</span><span class="badge milestone">里程碑</span><span class="size">87KB</span></div>
+        <div class="date">≈09-18 · 代码瀑布背景</div>
+        <ul class="pts">
+          <li>背景升级为全屏<b>动态代码瀑布</b>（替换 Verlet 物理幕布）</li>
+          <li>3600 帧稳定性仿真验证，程序员气质拉满</li>
+        </ul>
+        <div class="links"><a href="v2.1.2.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v2.1.2.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v2.1.3</span><span class="size">91KB</span></div>
+        <div class="date">≈09-18 · 悬浮分身</div>
+        <ul class="pts">
+          <li>右侧<b>悬浮数字分身</b>：只在右缘活动，极慢速跟随鼠标</li>
+        </ul>
+        <div class="links"><a href="v2.1.3.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v2.1.3.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v2.1.4</span><span class="badge milestone">里程碑</span><span class="size">112KB</span></div>
+        <div class="date">≈09-19 · Trent 问答</div>
+        <ul class="pts">
+          <li><b>Trent 问答弹窗</b>：流光边框、消息流、快捷提问 chips</li>
+          <li>Apple Intelligence 风格分身图标（trent-icon.png）</li>
+          <li>内置个人知识库，未命中走兜底话术</li>
+        </ul>
+        <div class="links"><a href="v2.1.4.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v2.1.4.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v2.1.5</span><span class="size">105KB</span></div>
+        <div class="date">≈09-19 · 知识库外挂</div>
+        <ul class="pts">
+          <li>Trent 弹窗定型：右侧停靠、不挡浏览</li>
+          <li>知识库外挂为 <b>trent-knowledge.js</b>——改问答不用动 HTML</li>
+        </ul>
+        <div class="links"><a href="v2.1.5.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v2.1.5.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v2.1.6</span><span class="badge milestone">里程碑</span><span class="size">112KB</span></div>
+        <div class="date">2026-09-19 · 3D 旅行地球</div>
+        <ul class="pts">
+          <li><b>3D 旅行地图地球</b>：Canvas 正交投影、8772 陆地点阵、惯性拖转、6 倍缩放——零外部依赖</li>
+          <li>地点照片标记 + 详情卡片 + 全屏灯箱</li>
+          <li>CHANGELOG 版本日志制度建立</li>
+        </ul>
+        <div class="links"><a href="v2.1.6.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v2.1.6.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v2.1.7</span><span class="badge milestone">里程碑</span><span class="size">121KB</span></div>
+        <div class="date">2026-09-19 · 全站三语</div>
+        <ul class="pts">
+          <li><b>简/繁/英全站三语实时切换</b>，选择持久化保存</li>
+          <li>i18n 字典 167 键 × 3 + 知识库三语 + AI 提示词随语言切换</li>
+          <li>首访语言选择框（选过不再打扰）</li>
+        </ul>
+        <div class="links"><a href="v2.1.7.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v2.1.7.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v2.1.8</span><span class="size">144KB</span></div>
+        <div class="date">2026-09-19 · 反馈墙</div>
+        <ul class="pts">
+          <li>💡 反馈墙：五星评分（App Store 同款交互）+ 公示墙</li>
+          <li>textContent 渲染防 XSS 注入</li>
+        </ul>
+        <div class="links"><a href="v2.1.8.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v2.1.8.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v2.1.9</span><span class="badge final">三代收官</span><span class="size">146KB</span></div>
+        <div class="date">2026-09-20 · 视频播放</div>
+        <ul class="pts">
+          <li>2023 旅行照片 22 张导入（5 新地点，HEIC→JPEG 流水线）</li>
+          <li>地球弹窗<b>视频播放</b>：若尔盖草原首个视频（HEVC→H.264 转码）</li>
+          <li>三代功能集大成，为全端适配奠基</li>
+        </ul>
+        <div class="links"><a href="v2.1.9.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v2.1.9.html" target="_blank">源码</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 第四代 ============ -->
+  <section class="gen">
+    <div class="gen-head">
+      <span class="gen-num">IV</span>
+      <h2 class="gen-title">第四代 · 全端体验</h2>
+      <span class="gen-era">2.2.x · 2026-09-20 ~ 09-24 · 2 个小版本 + 1 补丁</span>
+    </div>
+    <div class="gen-summary">
+      <h3>📱 代际进步总结 —— 从桌面单端到全设备、从本机到云端</h3>
+      <ul>
+        <li><b>三端响应式</b>：手机（≤640px）/ iPad（641-1024px）/ 电脑（>1024px）三档断点体系；刘海屏安全区 env(safe-area-inset) 全覆盖；100svh 动态视口解决移动端地址栏遮挡</li>
+        <li><b>移动端重设计</b>：Trent 弹窗变底部抽屉、音乐条贴底、导航收窄——不是"缩小的桌面版"而是"重排的手机版"</li>
+        <li><b>云端化</b>：反馈墙接入 Supabase，所有访客实时共享同一面墙（此前仅本机 localStorage）</li>
+        <li><b>体验细节</b>：PDF 下载二次确认（防移动端误触发）、手机端内容居中、教育经历按成长正序、emoji 兼容性修复</li>
+      </ul>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-top"><span class="ver">v2.2.0</span><span class="badge milestone">四代起点</span><span class="size">150KB</span></div>
+        <div class="date">2026-09-20 · 三端响应式</div>
+        <ul class="pts">
+          <li><b>三端响应式适配</b>：手机/iPad/电脑纯 CSS 媒体查询，无需 JS 判断</li>
+          <li>Trent 弹窗 → 底部抽屉（78dvh 上滑入场）</li>
+          <li>触摸目标 ≥44px，iOS 输入聚焦不再放大页面</li>
+        </ul>
+        <div class="links"><a href="v2.2.0.html" target="_blank">▶ 访问此版本</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/history/v2.2.0.html" target="_blank">源码</a></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="ver">v2.2.1</span><span class="badge final">当前主版本</span><span class="size">160KB</span></div>
+        <div class="date">2026-09-22 · 云端反馈墙</div>
+        <ul class="pts">
+          <li><b>Supabase 云端反馈墙</b>：跨访客实时共享，20 秒自动同步</li>
+          <li>PDF 下载确认弹窗（HEAD 探测真实大小）</li>
+          <li>手机端内容居中、邮箱卡片跨行</li>
+          <li>09-24 补丁：教育经历正序（小学→大学）、播放按钮 ⏸/▶ 状态修复、雅思 🇬🇧 国旗补全</li>
+        </ul>
+        <div class="links"><a href="../2.2.1.html" target="_blank">▶ 访问主站</a><a class="src" href="https://github.com/TrentLYU/myproject/blob/main/2.2.1.html" target="_blank">源码</a></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="note">
+    <b>📦 归档说明：</b><br>
+    ① 所有历史版本已做 <b>API Key 脱敏</b>——1.x 时期硬编码在源码中的 DeepSeek Key 已替换为 <code>sk-REDACTED</code> 占位符，密钥泄露风险清零（正因如此，历史版本的 AI 聊天功能不可用，属预期行为）；从 v2.1.1 起 Key 改由访客浏览器本地存储，永不进入代码。<br>
+    ② 历史版本共用主站根目录的 JS 数据（知识库 / i18n 字典 / 旅行地点）与图片资源；地球版页面由归档适配层自动修正照片相对路径。<br>
+    ③ 1.x 系列开发于 git 仓库初始化之前，无逐版提交记录，日期按代际区间标注（≈）。<br>
+    ④ 每个版本右上角标注文件体积，直观感受 42KB → 160KB 的成长。
+  </div>
+
+</div>
+
+<footer>
+  <p>律照楠 Personal Homepage · 网站演进史</p>
+  <p style="margin-top:6px"><a href="../2.2.1.html">主站 v2.2.1</a> · <a href="https://github.com/TrentLYU/myproject">GitHub 仓库</a> · <a href="../CHANGELOG.md">更新日志</a></p>
+</footer>
+
+</body>
+</html>

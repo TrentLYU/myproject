@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>律照楠 | Personal Homepage</title>
     <meta name="description" content="律照楠的个人主页 - 天津大学香港理工大学深圳未来技术学院 · 计算机科学与技术">
     <style>
@@ -158,7 +158,7 @@
 
         /* ===== Hero Section ===== */
         .hero {
-            min-height: 100vh; min-height: 100svh; display: flex; align-items: center; justify-content: center;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
             text-align: center; padding: 140px 24px 80px; position: relative;
         }
         .hero__content { max-width: 700px; z-index: 1; }
@@ -473,11 +473,10 @@
             transition: var(--transition);
         }
         .contact__item:hover { background: #fff; transform: translateY(-4px); box-shadow: var(--glass-shadow-hover); }
-        .contact__item--wide { grid-column: 1 / -1; }
-        .contact__icon { font-size: 1.5rem; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.03); border-radius: 10px; flex: none; }
-        .contact__info { display: flex; flex-direction: column; min-width: 0; }
+        .contact__icon { font-size: 1.5rem; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.03); border-radius: 10px; }
+        .contact__info { display: flex; flex-direction: column; }
         .contact__label { font-size: 0.75rem; color: var(--text-tertiary); font-weight: 600; text-transform: uppercase; }
-        .contact__value { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); overflow-wrap: anywhere; word-break: break-word; }
+        .contact__value { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); }
 
         /* ===== Footer & Scroll Top ===== */
         .footer { text-align: center; padding: 60px 24px; color: var(--text-tertiary); font-size: 0.9rem; position: relative; z-index: 1; }
@@ -522,7 +521,7 @@
         .floating-avatar__core {
             position: relative; width: 100%; height: 100%;
             border-radius: 20.5px;
-            background: url('trent-icon.png') center / cover no-repeat;
+            background: url('../trent-icon.png') center / cover no-repeat;
             display: flex; align-items: center; justify-content: center;
         }
         .floating-avatar__label {
@@ -585,7 +584,7 @@
         }
         .trent-modal__icon {
             width: 42px; height: 42px; border-radius: 13px; flex-shrink: 0;
-            background: url('trent-icon.png') center / cover no-repeat;
+            background: url('../trent-icon.png') center / cover no-repeat;
             box-shadow: 0 4px 16px rgba(0,0,0,0.45);
             animation: breatheSoft 4s ease-in-out infinite;
         }
@@ -706,155 +705,6 @@
         .lang-switch__item.is-active { color: var(--primary); font-weight: 700; }
         .lang-switch__item.is-active::after { content: '✓'; font-size: 0.8rem; }
 
-
-        /* ===== Feedback button bottom-left (2.1.8) ===== */
-        .fb-corner { position: fixed; left: 22px; bottom: 22px; z-index: 1500; display: flex; align-items: center; gap: 12px; }
-        .fb-fab {
-            position: relative; display: flex; align-items: center; gap: 8px;
-            padding: 12px 20px; border-radius: 999px; border: none;
-            background: linear-gradient(135deg, #007AFF, #5AC8FA);
-            color: #fff; font-size: 0.86rem; font-weight: 700; letter-spacing: 0.02em;
-            cursor: pointer; box-shadow: 0 10px 30px rgba(0,122,255,0.35);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            animation: fbFloat 3.2s ease-in-out infinite;
-        }
-        .fb-fab:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 14px 36px rgba(0,122,255,0.45); animation-play-state: paused; }
-        .fb-fab__icon { font-size: 1.05rem; }
-        .fb-fab__count {
-            position: absolute; top: -6px; right: -6px; min-width: 20px; height: 20px; padding: 0 5px;
-            border-radius: 10px; background: #FF3B30; color: #fff;
-            font-size: 0.7rem; font-weight: 800; line-height: 20px; text-align: center;
-            border: 2px solid #fff; box-shadow: 0 2px 8px rgba(255,59,48,0.4);
-        }
-        .fb-fab__count[hidden] { display: none; }
-        @keyframes fbFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-        .fb-hint {
-            padding: 8px 14px; border-radius: 14px 14px 14px 4px;
-            background: var(--glass-bg-heavy); border: 1px solid var(--glass-border);
-            color: var(--text-primary); font-size: 0.74rem; font-weight: 600; white-space: nowrap;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%);
-            animation: hintPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both 0.8s;
-        }
-        .fb-hint[hidden] { display: none; }
-        @keyframes hintPop { from { opacity: 0; transform: translateX(-8px) scale(0.9); } to { opacity: 1; transform: translateX(0) scale(1); } }
-
-        /* ===== Feedback modal (write / wall) ===== */
-        .fb-card {
-            width: 560px; max-width: 94vw; max-height: 88vh;
-            display: flex; flex-direction: column; overflow: hidden;
-            background: var(--glass-bg-heavy); border: 1px solid var(--glass-border);
-            color: var(--text-primary);
-            backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%);
-            box-shadow: 0 24px 80px rgba(0,0,0,0.25);
-        }
-        .fb-card .modal-close { background: rgba(0,0,0,0.06); color: var(--text-secondary); }
-        .fb-card .modal-close:hover { background: rgba(0,0,0,0.12); }
-        .fb-head { padding: 26px 28px 0; flex: none; }
-        .fb-title { font-size: 1.06rem; font-weight: 800; color: var(--text-primary); padding-right: 40px; }
-        .fb-tabs { display: flex; gap: 6px; margin-top: 16px; border-bottom: 1px solid rgba(0,0,0,0.08); }
-        .fb-tab {
-            padding: 10px 16px 12px; border: none; background: none; font-size: 0.86rem; font-weight: 700;
-            color: var(--text-secondary); cursor: pointer;
-            border-bottom: 2px solid transparent; transition: color 0.2s ease, border-color 0.2s ease;
-        }
-        .fb-tab:hover { color: var(--primary); }
-        .fb-tab.is-active { color: var(--primary); border-bottom-color: var(--primary); }
-        .fb-tab-count {
-            display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 6px;
-            border-radius: 9px; background: rgba(0,122,255,0.12); color: var(--primary);
-            font-size: 0.68rem; font-weight: 800; line-height: 18px; text-align: center; vertical-align: 1px;
-        }
-        .fb-pane { padding: 22px 28px 28px; overflow-y: auto; }
-        .fb-pane[hidden] { display: none; }
-        .fb-group { margin-bottom: 18px; }
-        .fb-label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; }
-        .fb-stars { display: flex; gap: 6px; }
-        .fb-star {
-            border: none; background: none; padding: 2px; cursor: pointer;
-            font-size: 2rem; line-height: 1; color: #D1D1D6;
-            transition: transform 0.15s ease, color 0.15s ease;
-        }
-        .fb-star:hover { transform: scale(1.18); }
-        .fb-star.is-lit { color: #FF9500; text-shadow: 0 2px 10px rgba(255,149,0,0.35); }
-        .fb-stars-hint { margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary); min-height: 1.1em; }
-        .fb-textarea { min-height: 150px !important; font-size: 0.9rem; line-height: 1.6; }
-        .fb-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 4px; }
-        .fb-actions .btn { padding: 11px 22px; font-size: 0.86rem; }
-        .btn--primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; box-shadow: none; }
-        .fb-req-hint { margin-top: 10px; font-size: 0.72rem; color: #FF9500; text-align: right; }
-        .fb-req-hint[hidden] { display: none; }
-
-        /* ===== Feedback wall & toast ===== */
-        .fb-summary {
-            display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px;
-            padding: 14px 16px; margin-bottom: 14px; border-radius: 16px;
-            background: rgba(0,122,255,0.06); border: 1px solid rgba(0,122,255,0.12);
-        }
-        .fb-summary[hidden] { display: none; }
-        .fb-summary__count { font-size: 0.9rem; font-weight: 800; color: var(--text-primary); }
-        .fb-summary__avg { font-size: 0.8rem; font-weight: 700; color: #FF9500; }
-        .fb-dist { margin-bottom: 16px; }
-        .fb-dist[hidden] { display: none; }
-        .fb-dist-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 0.7rem; color: var(--text-secondary); }
-        .fb-dist-row .n { width: 30px; text-align: right; flex: none; }
-        .fb-dist-bar { flex: 1; height: 6px; border-radius: 3px; background: rgba(0,0,0,0.06); overflow: hidden; }
-        .fb-dist-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #FF9500, #FFB340); transition: width 0.5s ease; }
-        .fb-dist-row .c { width: 22px; flex: none; text-align: left; }
-        .fb-empty { padding: 30px 10px; text-align: center; color: var(--text-secondary); font-size: 0.82rem; }
-
-        /* ===== 反馈墙实时同步提示（2.2.1 Supabase） ===== */
-        .fb-live {
-            display: flex; align-items: center; justify-content: center; gap: 7px;
-            margin: 0 0 14px; padding: 8px 12px; border-radius: 12px;
-            background: rgba(52, 199, 89, 0.10); border: 1px solid rgba(52, 199, 89, 0.25);
-            color: #248A3D; font-size: 0.74rem; font-weight: 600;
-        }
-        .fb-live[hidden] { display: none; }
-        .fb-live__dot {
-            width: 8px; height: 8px; border-radius: 50%; background: #34C759; flex: none;
-            box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.5);
-            animation: fbLivePulse 2s ease-out infinite;
-        }
-        @keyframes fbLivePulse {
-            0% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.45); }
-            70% { box-shadow: 0 0 0 7px rgba(52, 199, 89, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); }
-        }
-        .fb-item {
-            display: flex; gap: 12px; padding: 14px; margin-bottom: 10px;
-            border-radius: 16px; border: 1px solid rgba(0,0,0,0.06);
-            background: rgba(255,255,255,0.72); animation: fadeIn 0.3s ease;
-        }
-        .fb-item__avatar {
-            flex: none; width: 38px; height: 38px; border-radius: 50%;
-            background: linear-gradient(135deg, #007AFF, #5AC8FA); color: #fff;
-            font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; justify-content: center;
-        }
-        .fb-item__main { flex: 1; min-width: 0; }
-        .fb-item__meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .fb-item__name { font-size: 0.82rem; font-weight: 700; color: var(--text-primary); word-break: break-word; }
-        .fb-item__stars { color: #FF9500; font-size: 0.78rem; letter-spacing: 1px; }
-        .fb-item__date { margin-left: auto; font-size: 0.68rem; color: #8E8E93; flex: none; }
-        .fb-item__text { margin-top: 6px; font-size: 0.84rem; line-height: 1.65; color: var(--text-primary); word-break: break-word; white-space: pre-wrap; }
-        .fb-toast {
-            position: fixed; left: 50%; bottom: 90px; z-index: 3000;
-            transform: translateX(-50%) translateY(20px);
-            padding: 12px 22px; border-radius: 999px;
-            background: rgba(28,28,30,0.92); color: #fff; font-size: 0.86rem; font-weight: 600;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-            opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        .fb-toast.is-show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        @media (max-width: 640px) {
-            .fb-corner { left: 14px; bottom: 14px; flex-direction: column-reverse; align-items: flex-start; gap: 8px; }
-            .fb-fab__text { display: none; }
-            .fb-fab { padding: 14px; }
-            .fb-hint { font-size: 0.68rem; padding: 6px 10px; white-space: normal; }
-            .fb-head, .fb-pane { padding-left: 18px; padding-right: 18px; }
-            .fb-star { font-size: 1.7rem; }
-        }
-
         /* ===== 首次访问语言选择弹窗 ===== */
         .lang-modal-overlay {
             position: fixed; inset: 0; z-index: 99999;
@@ -914,20 +764,6 @@
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(20px);
         }
-
-        /* ===== PDF 下载确认弹窗（2.2.1） ===== */
-        .modal-card.pdf-dl-card {
-            width: 360px; max-width: 90vw; padding: 28px 28px 24px; text-align: center;
-            background: rgba(255, 255, 255, 0.92); color: var(--text-primary);
-            border: 1px solid var(--glass-border); box-shadow: 0 24px 80px rgba(0,0,0,0.18);
-        }
-        .pdf-dl-icon { font-size: 2.4rem; line-height: 1; margin-bottom: 12px; }
-        .pdf-dl-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; }
-        .pdf-dl-body { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
-        .pdf-dl-body code { background: rgba(0,0,0,0.05); padding: 2px 8px; border-radius: 6px; font-size: 0.84rem; color: var(--text-primary); }
-        .pdf-dl-actions { display: flex; gap: 12px; }
-        .pdf-dl-actions .btn { flex: 1; }
-        .pdf-dl-size { font-size: 0.78rem; color: var(--text-tertiary); }
         .modal-card.cert-modal .modal-content {
             padding: 24px; display: flex; flex-direction: column; align-items: center;
         }
@@ -1113,132 +949,22 @@
         .place-photos__empty { width: 100%; text-align: center; color: var(--text-tertiary); font-size: 0.85rem; padding: 34px 0; }
         .place-lightbox { position: fixed; inset: 0; z-index: 2300; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); cursor: zoom-out; }
         .place-lightbox.open { display: flex; }
-        .place-lightbox img { display: none; max-width: 92vw; max-height: 90vh; border-radius: 12px; }
-        .place-lightbox img.is-show { display: block; }
-        .place-lightbox video { display: none; max-width: 92vw; max-height: 88vh; border-radius: 12px; outline: none; background: #000; }
-        .place-lightbox video.is-show { display: block; }
-        .place-photos .place-video-tile {
-            height: 230px; width: 306px; flex: none; border-radius: var(--radius-sm);
-            border: 1px solid rgba(0,0,0,0.06); cursor: pointer; position: relative;
-            background-color: #1747a0; background-size: cover; background-position: center;
-            display: flex; align-items: center; justify-content: center;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .place-photos .place-video-tile:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,0.18); }
-        .place-video-tile::before {
-            content: ''; position: absolute; inset: 0; border-radius: var(--radius-sm);
-            background: linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.42));
-        }
-        .place-video-tile__badge {
-            position: relative; z-index: 1; padding: 9px 18px; border-radius: 999px;
-            background: rgba(0,0,0,0.55); color: #fff; font-size: 0.82rem; font-weight: 700;
-            letter-spacing: 0.03em; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.25);
-        }
+        .place-lightbox img { max-width: 92vw; max-height: 90vh; border-radius: 12px; }
         @media (max-width: 640px) {
             .travel__stage { height: 340px; }
             .globe__hint { display: none; }
             .travel-pin { width: 38px; height: 38px; }
             .place-photos img { height: 180px; }
-            .place-photos .place-video-tile { height: 180px; width: 240px; }
         }
-
-        /* ================= 2.2.0 三端适配 ================= */
-        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-        body { -webkit-tap-highlight-color: transparent; }
-        button, .btn, .chip, .nav__toggle, .fb-star, .fb-tab, .travel-pin, .place-close, .modal-close { touch-action: manipulation; }
-
-        /* ---------- 平板（iPad 等 641–1024px） ---------- */
-        @media (max-width: 1024px) {
-            .hero__name { font-size: 3.6rem; }
-            .hero { padding: 130px 28px 72px; }
-            .section { padding: 72px 28px; }
-            .travel__stage { height: 480px; }
-            .trent-modal { width: 350px; }
-            .avatar-section { max-width: 90%; }
-        }
-
-        /* ---------- 手机竖屏（≤640px） ---------- */
-        @media (max-width: 640px) {
-            /* 导航：贴顶 + 刘海安全区 */
-            .nav { top: 0; border-radius: 0; padding-top: env(safe-area-inset-top); }
-            .nav__inner { height: 48px; padding: 0 16px; }
-            .nav__brand { font-size: 1rem; }
-            .lang-switch__label { display: none; }  /* 小屏只留 🌐 图标，腾出空间 */
-            .nav__links { top: calc(48px + env(safe-area-inset-top)); padding: 14px 16px; }
-
-            /* 首屏 */
-            .hero { padding: 118px 20px 56px; }
-            .hero__avatar { width: 84px; height: 84px; font-size: 1.9rem; margin-bottom: 18px; }
-            .hero__name { font-size: 2.1rem; }
-            .hero__subtitle { font-size: 0.98rem; }
-            .hero__actions { flex-wrap: wrap; justify-content: center; gap: 10px; }
-
-            /* 正文区块 */
-            .section { padding: 52px 18px; }
-            .section__title { font-size: 1.55rem; }
-
-            /* 2.2.1：手机端内容文字居中（卡片单列满宽时视觉更协调） */
-            .about__grid .card, .timeline__item, .skills__grid .card,
-            .contact__item, .project__embed-card, .form__label { text-align: center; }
-            .about__grid .card { display: flex; flex-direction: column; align-items: center; }
-            .skill__tags { justify-content: center; }
-            .contact__item { justify-content: center; }
-            .contact__info { align-items: center; }
-            .project__embed-header { flex-direction: column; align-items: center; gap: 10px; }
-            .project__embed-actions { justify-content: center; flex-wrap: wrap; }
-
-            /* iOS 聚焦输入框不再自动放大页面 */
-            input, textarea, select { font-size: 16px; }
-            .form__input, .form__textarea { padding: 12px 14px; }
-
-            /* Trent 弹窗：右侧停靠改为底部抽屉 */
-            .trent-modal {
-                top: auto; bottom: 0; left: 0; right: 0;
-                transform: none;
-                width: 100%; max-width: 100%;
-                height: 78vh; height: 78dvh; max-height: 620px;
-                border-radius: 26px 26px 0 0;
-                animation: trentUp 0.38s cubic-bezier(0.32, 0.72, 0, 1);
-            }
-            .trent-modal__body { border-radius: 24px 24px 0 0; padding-bottom: env(safe-area-inset-bottom); }
-            @keyframes trentUp { from { transform: translateY(45%); opacity: 0.3; } to { transform: translateY(0); opacity: 1; } }
-
-            /* 悬浮层排布：音乐条贴底（安全区之上），反馈按钮与回顶按钮抬到音乐条上方 */
-            .music-player { bottom: calc(14px + env(safe-area-inset-bottom)); border-radius: 16px; }
-            .fb-corner { bottom: calc(78px + env(safe-area-inset-bottom)); }
-            .fb-hint { max-width: 46vw; white-space: normal; line-height: 1.4; }
-            .scroll-top { bottom: calc(78px + env(safe-area-inset-bottom)); left: auto; right: 16px; }
-
-            /* 旅行弹窗与灯箱 */
-            .place-card { width: 94vw; padding: 22px 18px; max-height: 86vh; border-radius: 20px; }
-            .place-card h3 { font-size: 1.3rem; }
-            .place-photos { gap: 8px; }
-            .place-lightbox img, .place-lightbox video { max-width: 96vw; border-radius: 8px; }
-
-            /* 其他弹窗 */
-            .modal-card { width: 95vw; border-radius: 22px; }
-            .modal-card.cert-modal { width: 94vw; }
-            .cert-image { max-height: 56vh; }
-            .fb-card { width: 94vw; max-height: 90vh; }
-            .fb-card .fb-actions .btn { flex: 1; justify-content: center; padding: 12px 10px; }
-            .fb-toast { bottom: calc(110px + env(safe-area-inset-bottom)); max-width: 88vw; text-align: center; }
-            .lang-modal { width: 86vw; padding: 28px 22px 24px; border-radius: 22px; }
-
-            /* 表格类文本换行 */
-            .edu-item, .project__desc, .fb-item__text { word-break: break-word; }
-        }
-
-        /* ---------- 手机横屏（高度受限） ---------- */
-        @media (max-height: 520px) and (orientation: landscape) {
-            .hero { min-height: auto; padding: 92px 24px 40px; }
-            .trent-modal { height: 96vh; max-height: none; }
-            .fb-card { max-height: 94vh; }
-        }
-
     </style>
 </head>
 <body>
+<!-- 📦 历史归档横幅（归档时自动插入） -->
+<div style="background:#1d1d1f;color:#e8e8ed;font:12px/1.7 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:10px 16px;text-align:center;border-bottom:1px solid #3a3a3e;">
+  📦 你正在浏览历史归档版本 <b>v2.1.7</b>（第三代 · 智能与内容 · 全站三语）
+  ｜ <a href="index.html" style="color:#6db3ff;text-decoration:none;">📚 网站演进史</a>  ｜ <a href="../2.2.1.html" style="color:#6db3ff;text-decoration:none;">🚀 返回最新版 v2.2.1</a>
+</div>
+
     <!-- Dynamic Background -->
     <canvas id="bg-canvas"></canvas>
     <div class="bg-overlay"></div>
@@ -1272,7 +998,6 @@
                 <li><a href="#travel" data-i18n="nav.travel">旅行</a></li>
                 <li><a href="#interactive" data-i18n="nav.interactive">互动</a></li>
                 <li><a href="#contact" data-i18n="nav.contact">联系</a></li>
-                <li><a href="history/" data-i18n="nav.history">📚 演进史</a></li>
             </ul>
             <!-- 右上角三语切换器 -->
             <div class="lang-switch" id="langSwitch">
@@ -1349,14 +1074,9 @@
         </div>
         <div class="timeline">
             <div class="timeline__item">
-                <span class="timeline__period" data-i18n="edu.periodPrimary">小学</span>
-                <h3 class="timeline__title" data-i18n="edu.primaryName">九一小学</h3>
-                <p class="timeline__desc" data-i18n="edu.primaryDesc">山西太原</p>
-            </div>
-            <div class="timeline__item">
-                <span class="timeline__period" data-i18n="edu.periodMiddle">初中</span>
-                <h3 class="timeline__title" data-i18n="edu.middleName">常青藤中学校</h3>
-                <p class="timeline__desc" data-i18n="edu.middleDesc">山西太原</p>
+                <span class="timeline__period" data-i18n="edu.periodUni">本科 · 在读</span>
+                <h3 class="timeline__title" data-i18n="edu.uniName">天津大学香港理工大学深圳未来技术学院</h3>
+                <p class="timeline__desc" data-i18n="edu.uniDesc">计算机科学与技术专业 · 广东深圳</p>
             </div>
             <div class="timeline__item">
                 <span class="timeline__period" data-i18n="edu.periodHigh">高中</span>
@@ -1364,9 +1084,14 @@
                 <p class="timeline__desc" data-i18n="edu.highDesc">山西太原</p>
             </div>
             <div class="timeline__item">
-                <span class="timeline__period" data-i18n="edu.periodUni">本科 · 在读</span>
-                <h3 class="timeline__title" data-i18n="edu.uniName">天津大学香港理工大学深圳未来技术学院</h3>
-                <p class="timeline__desc" data-i18n="edu.uniDesc">计算机科学与技术专业 · 广东深圳</p>
+                <span class="timeline__period" data-i18n="edu.periodMiddle">初中</span>
+                <h3 class="timeline__title" data-i18n="edu.middleName">常青藤中学校</h3>
+                <p class="timeline__desc" data-i18n="edu.middleDesc">山西太原</p>
+            </div>
+            <div class="timeline__item">
+                <span class="timeline__period" data-i18n="edu.periodPrimary">小学</span>
+                <h3 class="timeline__title" data-i18n="edu.primaryName">九一小学</h3>
+                <p class="timeline__desc" data-i18n="edu.primaryDesc">山西太原</p>
             </div>
         </div>
     </section>
@@ -1393,15 +1118,15 @@
                         <h3 class="project__embed-title" data-i18n="proj.pptTitle">AI4s — PVC 项目介绍</h3>
                     </div>
                     <div class="project__embed-actions">
-                        <a id="pptOpenLink" href="assets/AI4sPVC.pdf" target="_blank" class="project__embed-btn project__embed-btn--outline" data-i18n="proj.openNew">↗ 新窗口打开</a>
-                        <a id="pptDownloadLink" href="assets/AI4sPVC.pdf" download class="project__embed-btn project__embed-btn--fill" data-i18n="proj.downloadPdf">⬇ 下载 PDF</a>
+                        <a id="pptOpenLink" href="../AI4sPVC.pdf" target="_blank" class="project__embed-btn project__embed-btn--outline" data-i18n="proj.openNew">↗ 新窗口打开</a>
+                        <a id="pptDownloadLink" href="../AI4sPVC.pdf" download class="project__embed-btn project__embed-btn--fill" data-i18n="proj.downloadPdf">⬇ 下载 PDF</a>
                     </div>
                 </div>
                 <div class="project__placeholder" id="pptPlaceholder">
                     <div class="project__placeholder-icon">📄</div>
                     <p class="project__placeholder-text">
                         <span data-i18n="proj.loadHint">点击下方按钮加载 PDF 预览</span><br>
-                        <span data-i18n="proj.pathLabel">当前路径：</span><code id="pptPathHint">assets/AI4sPVC.pdf</code><br>
+                        <span data-i18n="proj.pathLabel">当前路径：</span><code id="pptPathHint">../AI4sPVC.pdf</code><br>
                         <span style="font-size:0.8rem; opacity:0.7;" data-i18n="proj.liveHint">（系统已自动探测文件位置，如无法显示请用 Live Server 打开）</span>
                     </p>
                     <button class="project__embed-btn project__embed-btn--fill" onclick="loadPPT()" style="margin-top:12px;" data-i18n="proj.loadBtn">🔄 加载 PDF 预览</button>
@@ -1419,11 +1144,11 @@
                         <h3 class="project__embed-title">3D VR 1 Pro Version</h3>
                     </div>
                     <div class="project__embed-actions">
-                        <a id="vr1proOpenLink" href="assets/3D VR 1pro version.html" target="_blank" class="project__embed-btn project__embed-btn--outline" data-i18n="proj.openNew">↗ 新窗口打开</a>
+                        <a id="vr1proOpenLink" href="../3D VR 1pro version.html" target="_blank" class="project__embed-btn project__embed-btn--outline" data-i18n="proj.openNew">↗ 新窗口打开</a>
                     </div>
                 </div>
                 <div class="project__iframe-wrapper">
-                    <iframe id="vr1proIframe" src="assets/3D VR 1pro version.html" title="3D VR 1 Pro Version" loading="lazy"></iframe>
+                    <iframe id="vr1proIframe" src="../3D VR 1pro version.html" title="3D VR 1 Pro Version" loading="lazy"></iframe>
                 </div>
                 <div class="project__embed-desc" data-i18n="proj.vrProDesc">AI for Separation 项目的 3D VR 可视化成果（Pro 版本）。支持交互式三维浏览，展示分离过程的空间结构。</div>
             </div>
@@ -1438,11 +1163,11 @@
                         <h3 class="project__embed-title">3D VR 1.1 Version — Heating Process</h3>
                     </div>
                     <div class="project__embed-actions">
-                        <a id="vr11OpenLink" href="assets/3D VR 1.1version (heating process).html" target="_blank" class="project__embed-btn project__embed-btn--outline" data-i18n="proj.openNew">↗ 新窗口打开</a>
+                        <a id="vr11OpenLink" href="../3D VR 1.1version（heating process）.html" target="_blank" class="project__embed-btn project__embed-btn--outline" data-i18n="proj.openNew">↗ 新窗口打开</a>
                     </div>
                 </div>
                 <div class="project__iframe-wrapper">
-                    <iframe id="vr11Iframe" src="assets/3D VR 1.1version (heating process).html" title="3D VR 1.1 Heating Process" loading="lazy"></iframe>
+                    <iframe id="vr11Iframe" src="../3D VR 1.1version（heating process）.html" title="3D VR 1.1 Heating Process" loading="lazy"></iframe>
                 </div>
                 <div class="project__embed-desc" data-i18n="proj.vr11Desc">加热过程的 3D VR 可视化演示。展示分离过程中热力学变化的三维动态效果，是 1.0 版本的迭代升级。</div>
             </div>
@@ -1502,7 +1227,7 @@
                 <div class="skill__category">
                     <h4 class="skill__category-title" data-i18n="skills.catLang">🌍 语言能力</h4>
                     <div class="skill__tags">
-                        <span class="skill__tag clickable" id="ieltsTag" data-i18n="skills.ielts">🇬🇧 雅思 IELTS 7.0</span>
+                        <span class="skill__tag clickable" id="ieltsTag" data-i18n="skills.ielts">🇬 雅思 IELTS 7.0</span>
                         <span class="skill__tag" data-i18n="skills.chinese">中文母语</span>
                     </div>
                 </div>
@@ -1578,7 +1303,7 @@
             <div class="place-photos" id="placePhotos"></div>
         </div>
     </div>
-    <div class="place-lightbox" id="placeLightbox"><img id="placeLightboxImg" alt=""><video id="placeLightboxVideo" controls playsinline preload="metadata"></video></div>
+    <div class="place-lightbox" id="placeLightbox"><img id="placeLightboxImg" alt=""></div>
 
     <!-- Interactive -->
     <section class="section" id="interactive">
@@ -1627,7 +1352,7 @@
             <p class="section__subtitle" data-i18n="contact.subtitle">期待与你建立连接</p>
         </div>
         <div class="contact__grid">
-            <a href="mailto:nan030032@outlook.com" class="contact__item contact__item--wide">
+            <a href="mailto:nan030032@outlook.com" class="contact__item">
                 <span class="contact__icon">📧</span>
                 <div class="contact__info">
                     <span class="contact__label" data-i18n="contact.email">邮箱</span>
@@ -1654,7 +1379,6 @@
     <footer class="footer">
         <p data-i18n-html="footer.line1">© 2025 律照楠 · Built with <span class="footer__heart">♥</span> using Vibe Coding</p>
         <p style="margin-top:8px; font-size:0.8rem; opacity:0.7;" data-i18n="footer.line2">天津大学香港理工大学深圳未来技术学院 · 计算机科学与技术</p>
-        <p style="margin-top:10px; font-size:0.8rem; opacity:0.85;"><a href="history/" style="color: var(--primary); text-decoration: none;">📚 <span data-i18n="footer.historyLink">网站演进史 — 4 代 23 版，每一步都留档</span></a></p>
     </footer>
 
     <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
@@ -1755,7 +1479,7 @@
         <div class="modal-card cert-modal">
             <button class="modal-close" id="fluteClose">✕</button>
             <div class="modal-content">
-                <img src="cert-flute.png" alt="竹笛十级证书" data-i18n-alt="cert.fluteAlt" class="cert-image">
+                <img src="../cert-flute.png" alt="竹笛十级证书" data-i18n-alt="cert.fluteAlt" class="cert-image">
                 <div class="cert-title" data-i18n="cert.fluteTitle">社会艺术水平考级证书 · 竹笛 10级</div>
             </div>
         </div>
@@ -1765,7 +1489,7 @@
         <div class="modal-card cert-modal">
             <button class="modal-close" id="mangaClose">✕</button>
             <div class="modal-content">
-                <img src="cert-manga.png" alt="漫画九级证书" data-i18n-alt="cert.mangaAlt" class="cert-image">
+                <img src="../cert-manga.png" alt="漫画九级证书" data-i18n-alt="cert.mangaAlt" class="cert-image">
                 <div class="cert-title" data-i18n="cert.mangaTitle">社会艺术水平考级证书 · 漫画 9级</div>
             </div>
         </div>
@@ -1775,91 +1499,11 @@
         <div class="modal-card cert-modal">
             <button class="modal-close" id="ieltsClose">✕</button>
             <div class="modal-content">
-                <img src="cert-ielts.png" alt="雅思成绩单" data-i18n-alt="cert.ieltsAlt" class="cert-image">
+                <img src="../cert-ielts.png" alt="雅思成绩单" data-i18n-alt="cert.ieltsAlt" class="cert-image">
                 <div class="cert-title" data-i18n="cert.ieltsTitle">IELTS Test Report Form · Overall 7.0</div>
             </div>
         </div>
     </div>
-
-
-    <!-- ===== 左下角意见反馈入口（2.1.8） ===== -->
-    <div class="fb-corner">
-        <button class="fb-fab" id="fbFab" aria-haspopup="dialog" data-i18n-title="fb.fab" data-i18n-aria="fb.fab">
-            <span class="fb-fab__icon">💡</span>
-            <span class="fb-fab__text" data-i18n="fb.fab">关于网页改进的建议</span>
-            <span class="fb-fab__count" id="fbCount" hidden>0</span>
-        </button>
-        <div class="fb-hint" id="fbHint" data-i18n-html="fb.hint">👈 点击以反馈意见</div>
-    </div>
-
-    <!-- ===== 反馈弹窗：提建议 / 反馈墙 ===== -->
-    <div class="modal-overlay" id="feedbackModal">
-        <div class="modal-card fb-card" role="dialog" aria-modal="true" data-i18n-aria="fb.modalTitle">
-            <button class="modal-close" id="fbClose" data-i18n-aria="fb.close">✕</button>
-            <div class="fb-head">
-                <div class="fb-title" data-i18n="fb.modalTitle">关于网页改进的建议</div>
-                <div class="fb-tabs" role="tablist">
-                    <button class="fb-tab is-active" id="fbTabWrite" role="tab" aria-selected="true" data-i18n="fb.tabWrite">✍️ 提建议</button>
-                    <button class="fb-tab" id="fbTabWall" role="tab" aria-selected="false">
-                        <span data-i18n="fb.tabWall">📋 反馈墙</span><span class="fb-tab-count" id="fbTabCount">0</span>
-                    </button>
-                </div>
-            </div>
-            <!-- 填写页 -->
-            <div class="fb-pane" id="fbWritePane" role="tabpanel">
-                <div class="fb-group">
-                    <label class="fb-label" for="fbName" data-i18n="fb.nameLabel">怎么称呼你？（选填，不填默认匿名）</label>
-                    <input class="form__input" type="text" id="fbName" maxlength="20" autocomplete="off" placeholder="昵称或真名，如：小明" data-i18n-ph="fb.namePh">
-                </div>
-                <div class="fb-group">
-                    <span class="fb-label" data-i18n="fb.rateLabel">给网页打个分</span>
-                    <div class="fb-stars" id="fbStars" role="radiogroup" data-i18n-aria="fb.rateLabel">
-                        <button class="fb-star" type="button" data-star="1" role="radio" aria-checked="false">★</button>
-                        <button class="fb-star" type="button" data-star="2" role="radio" aria-checked="false">★</button>
-                        <button class="fb-star" type="button" data-star="3" role="radio" aria-checked="false">★</button>
-                        <button class="fb-star" type="button" data-star="4" role="radio" aria-checked="false">★</button>
-                        <button class="fb-star" type="button" data-star="5" role="radio" aria-checked="false">★</button>
-                    </div>
-                    <div class="fb-stars-hint" id="fbStarsHint" data-i18n="fb.rateHintDefault">点击星星打分</div>
-                </div>
-                <div class="fb-group">
-                    <label class="fb-label" for="fbText" data-i18n="fb.textLabel">你的建议</label>
-                    <textarea class="form__textarea fb-textarea" id="fbText" maxlength="500" placeholder="想改哪里？排版、配色、内容、新点子……尽管说！" data-i18n-ph="fb.textPh"></textarea>
-                </div>
-                <div class="fb-actions">
-                    <button class="btn btn--ghost" id="fbCancel" data-i18n="fb.cancel">取消</button>
-                    <button class="btn btn--primary" id="fbPublish" disabled data-i18n="fb.publish">发布 ✨</button>
-                </div>
-                <div class="fb-req-hint" id="fbReqHint" data-i18n="fb.requiredHint">打个分、写下建议后即可发布</div>
-            </div>
-            <!-- 反馈墙页（汇总公示） -->
-            <div class="fb-pane" id="fbWallPane" role="tabpanel" hidden>
-                <div class="fb-live" id="fbLive" hidden><span class="fb-live__dot"></span><span data-i18n="fb.liveHint">🌐 实时同步中 — 所有访客的反馈都会显示在这里</span></div>
-                <div class="fb-summary" id="fbSummary" hidden></div>
-                <div class="fb-dist" id="fbDist" hidden></div>
-                <div id="fbList"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== PDF 下载确认弹窗（2.2.1：访客主动点击并确认后才下载） ===== -->
-    <div class="modal-overlay" id="pdfConfirmModal">
-        <div class="modal-card pdf-dl-card" role="dialog" aria-modal="true" data-i18n-aria="proj.dlTitle">
-            <div class="pdf-dl-icon">📄</div>
-            <div class="pdf-dl-title" data-i18n="proj.dlTitle">下载 PDF？</div>
-            <div class="pdf-dl-body">
-                <span data-i18n="proj.dlBody">即将下载以下文件到你的设备：</span><br>
-                <code id="pdfDlName">AI4sPVC.pdf</code> <span class="pdf-dl-size" id="pdfDlSize"></span>
-            </div>
-            <div class="pdf-dl-actions">
-                <button class="btn btn--ghost" id="pdfDlCancel" data-i18n="proj.dlCancel">取消</button>
-                <button class="btn btn--primary" id="pdfDlOk" data-i18n="proj.dlOk">⬇ 确认下载</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== 发布成功提示 ===== -->
-    <div class="fb-toast" id="fbToast" role="status"></div>
 
     <!-- 首次访问语言选择弹窗（仅首次打开时显示，之后可用右上角 🌐 随时切换） -->
     <div class="lang-modal-overlay" id="langModal" hidden>
@@ -1885,18 +1529,30 @@
     </div>
 
     <!-- 三语支持：i18n-dict.js = 字典，i18n.js = 引擎（含首次访问语言选择弹窗） -->
-    <script src="i18n-dict.js"></script>
-    <script src="i18n.js"></script>
+    <script src="../i18n-dict.js"></script>
+    <script src="../i18n.js"></script>
 
     <!-- Trent 知识库：trent-knowledge.js 是简中源文件（可直接编辑）；en/tw 为翻译文件，勿改顺序 -->
-    <script src="trent-knowledge.js"></script>
-    <script src="trent-knowledge.en.js"></script>
-    <script src="trent-knowledge.tw.js"></script>
+    <script src="../trent-knowledge.js"></script>
+    <script src="../trent-knowledge.en.js"></script>
+    <script src="../trent-knowledge.tw.js"></script>
 
     <!-- 旅行地球：点阵数据 + 地点配置（照片放 travel/ 文件夹，编辑 travel-places.js）+ 渲染逻辑 -->
-    <script src="globe-data.js"></script>
-    <script src="travel-places.js"></script>
-    <script src="globe.js"></script>
+    <script src="../globe-data.js"></script>
+    <script src="../travel-places.js"></script>
+<script>
+/* ===== 归档适配层（2026-09-24 归档时插入，非原版代码）=====
+   本页位于 history/ 子目录，travel-places.js 里的 travel/ 照片路径
+   需补 ../ 前缀才能命中仓库根目录的 travel/ 资源。 */
+(function () {
+  var fix = function (s) { return (typeof s === 'string' && s.indexOf('../') !== 0) ? '../' + s : s; };
+  (window.TRAVEL_PLACES || []).forEach(function (p) {
+    (p.photos || []).forEach(function (ph, i, arr) { arr[i] = fix(ph); });
+    (p.videos || []).forEach(function (v) { v.src = fix(v.src); v.poster = fix(v.poster); });
+  });
+})();
+</script>
+    <script src="../globe.js"></script>
 
     <script>
         // ===== 三语桥：动态文案统一通过 T() 从 i18n-dict.js 取词 =====
@@ -1904,7 +1560,7 @@
 
         // ===== Music Player =====
         (function() {
-            const songs = ["FM1.mp3", "FM2.mp3"];
+            const songs = ["../FM1.mp3", "../FM2.mp3"];
             const songNames = ["FM1", "FM2"];
             let currentIndex = 0;
             let isPlaying = false;
@@ -1924,7 +1580,7 @@
 
             function updateUI() {
                 musicTitle.textContent = songNames[currentIndex];
-                playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
+                playPauseBtn.textContent = isPlaying ? '' : '▶';
                 if (isPlaying) {
                     musicIcon.classList.add('playing');
                     musicStatus.textContent = T('music.playing');
@@ -2139,20 +1795,20 @@
         // ===== 项目文件自动探测系统 =====
         const PROJECT_CANDIDATES = {
             ppt: [
-                'assets/AI4sPVC.pdf', 'AI4sPVC.pdf',
-                'assets/AI4sPVC.pdf', 'AI4sPVC.pdf',
-                'assets/AI4sPVC.pdf', 'AI4sPVC.pdf'
+                '../AI4sPVC.pdf', 'AI4sPVC.pdf',
+                '../AI4sPVC.pdf', 'AI4sPVC.pdf',
+                '../AI4sPVC.pdf', 'AI4sPVC.pdf'
             ],
             vr1pro: [
-                'assets/3D VR 1pro version.html', '3D VR 1pro version.html',
-                'assets/3d-vr-1pro.html', '3d-vr-1pro.html'
+                '../3D VR 1pro version.html', '3D VR 1pro version.html',
+                '../3D VR 1pro version.html', '3d-vr-1pro.html'
             ],
             vr11: [
-                'assets/3D VR 1.1version (heating process).html',
+                '../3D VR 1.1version（heating process）.html',
                 '3D VR 1.1version (heating process).html',
                 'assets/3D VR 1.1version（heating process）.html',
                 '3D VR 1.1version（heating process）.html',
-                'assets/3d-vr-1.1.html', '3d-vr-1.1.html'
+                '../3D VR 1.1version（heating process）.html', '3d-vr-1.1.html'
             ]
         };
         const resolvedFiles = { ppt: null, vr1pro: null, vr11: null };
@@ -2162,24 +1818,22 @@
             for (const path of list) {
                 try {
                     const res = await fetch(encodeURI(path), { method: 'HEAD' });
-                    if (res.ok) return { path, confirmed: true, size: +(res.headers.get('content-length') || 0) };
+                    if (res.ok) return { path, confirmed: true };
                 } catch (e) { /* file:// 协议下 fetch 不可用，继续 */ }
             }
-            return { path: list[0], confirmed: false, size: 0 };
+            return { path: list[0], confirmed: false };
         }
 
         async function initProjects() {
             for (const key of Object.keys(PROJECT_CANDIDATES)) {
-                const { path, confirmed, size } = await resolveFile(key);
+                const { path, confirmed } = await resolveFile(key);
                 resolvedFiles[key] = path;
                 const enc = encodeURI(path);
                 if (key === 'ppt') {
                     document.getElementById('pptOpenLink').setAttribute('href', enc);
                     document.getElementById('pptDownloadLink').setAttribute('href', enc);
                     document.getElementById('pptPathHint').textContent = path;
-                    resolvedFiles.pptSize = size || 0;
-                    // 2.2.1：不再自动加载 PDF —— 部分移动端浏览器会在 iframe 加载 PDF 时直接触发下载，
-                    // 现在完全由访客主动选择：加载预览 / 新窗口打开 / 点击下载并确认。
+                    if (confirmed) loadPPT();
                 } else if (key === 'vr1pro') {
                     document.getElementById('vr1proOpenLink').setAttribute('href', enc);
                     document.getElementById('vr1proIframe').setAttribute('src', enc);
@@ -2502,49 +2156,6 @@
             p.replaceWith(w);
         }
 
-        // ===== PDF 下载确认（2.2.1：访客点击「下载 PDF」→ 确认弹窗 → 确认后才下载） =====
-        (function () {
-            const modal = document.getElementById('pdfConfirmModal');
-            const dlBtn = document.getElementById('pptDownloadLink');
-            const okBtn = document.getElementById('pdfDlOk');
-            const cancelBtn = document.getElementById('pdfDlCancel');
-            const nameEl = document.getElementById('pdfDlName');
-            const sizeEl = document.getElementById('pdfDlSize');
-            if (!modal || !dlBtn || !okBtn) return;
-
-            function fmtSize(n) {
-                if (!n || n <= 0) return '';
-                return '（约 ' + (n / 1048576).toFixed(1) + ' MB）';
-            }
-            function closeDl() { modal.classList.remove('is-open'); }
-
-            dlBtn.addEventListener('click', e => {
-                e.preventDefault();
-                const href = dlBtn.getAttribute('href') || 'AI4sPVC.pdf';
-                const file = decodeURIComponent(href.split('/').pop() || 'AI4sPVC.pdf');
-                nameEl.textContent = file;
-                sizeEl.textContent = fmtSize(resolvedFiles.pptSize);
-                okBtn.dataset.href = href;
-                modal.classList.add('is-open');
-            });
-
-            okBtn.addEventListener('click', () => {
-                const a = document.createElement('a');
-                a.href = okBtn.dataset.href || 'AI4sPVC.pdf';
-                a.download = '';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                closeDl();
-            });
-
-            cancelBtn.addEventListener('click', closeDl);
-            modal.addEventListener('click', e => { if (e.target === modal) closeDl(); });
-            document.addEventListener('keydown', e => {
-                if (e.key === 'Escape' && modal.classList.contains('is-open')) closeDl();
-            });
-        })();
-
         // ===== Forms =====
         document.getElementById('questionForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -2613,7 +2224,7 @@
         });
 
         // ===== Image preload check =====
-        const imagesToCheck = ['Arnold.png', 'Russell.png', 'Djokovic.png', '石宇奇.png', 'cert-flute.png', 'cert-manga.png', 'cert-ielts.png'];
+        const imagesToCheck = ['Arnold.png', 'Russell.png', 'Djokovic.png', '石宇奇.png', '../cert-flute.png', '../cert-manga.png', '../cert-ielts.png'];
         imagesToCheck.forEach(src => {
             const img = new Image();
             img.onload = () => console.log(`✅ 图片加载成功: ${src}`);
@@ -2623,254 +2234,6 @@
 
         // ===== 启动项目文件探测 =====
         initProjects();
-
-
-        // ===== Feedback (bottom-left fab, 2.1.8) =====
-        (function () {
-            const LIST_KEY = 'trent-feedback';
-            const HINT_KEY = 'trent-feedback-hint';
-            const LOCALE = { zh: 'zh-CN', tw: 'zh-TW', en: 'en-US' };
-            const langFb = () => (window.I18n ? window.I18n.getLang() : 'zh');
-
-            const fab = document.getElementById('fbFab');
-            const hint = document.getElementById('fbHint');
-            const countBadge = document.getElementById('fbCount');
-            const modal = document.getElementById('feedbackModal');
-            const tabWrite = document.getElementById('fbTabWrite');
-            const tabWall = document.getElementById('fbTabWall');
-            const tabCount = document.getElementById('fbTabCount');
-            const writePane = document.getElementById('fbWritePane');
-            const wallPane = document.getElementById('fbWallPane');
-            const nameInput = document.getElementById('fbName');
-            const starsBox = document.getElementById('fbStars');
-            const starsHint = document.getElementById('fbStarsHint');
-            const textArea = document.getElementById('fbText');
-            const publishBtn = document.getElementById('fbPublish');
-            const reqHint = document.getElementById('fbReqHint');
-            const summary = document.getElementById('fbSummary');
-            const dist = document.getElementById('fbDist');
-            const list = document.getElementById('fbList');
-            const toast = document.getElementById('fbToast');
-            const starEls = Array.from(starsBox.querySelectorAll('.fb-star'));
-
-            let items = [];
-            try { items = JSON.parse(localStorage.getItem(LIST_KEY)) || []; } catch (e) { items = []; }
-            let rating = 0, preview = 0, toastTimer = null, pollTimer = null, cloudReady = false;
-
-            // ===== Supabase 云端反馈墙（2.2.1：所有访客的反馈实时共享） =====
-            // 配置方法见 CHANGELOG 2.2.1：在 supabase.com 建免费项目 + feedback 表，
-            // 把 Project Settings → API 里的 Project URL 和 anon public key 填到下面两行。
-            const SUPABASE_URL = 'https://vaqnkidkablxyuryrsxi.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhcW5raWRrYWJseHl1cnlyc3hpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwMzMzODUsImV4cCI6MjEwNTYwOTM4NX0.RfjbrXpqo2WxcyGfe3LzVQW74uw4OE1HtWZKrWovCyE';
-            const FB_TABLE = 'feedback';
-            const cloudOn = /^https:\/\/.+\.supabase\.co$/.test(SUPABASE_URL) && SUPABASE_ANON_KEY.length > 20;
-
-            function fbHeaders(json) {
-                const h = { apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + SUPABASE_ANON_KEY };
-                if (json) h['Content-Type'] = 'application/json';
-                return h;
-            }
-            async function cloudList() {
-                const res = await fetch(SUPABASE_URL + '/rest/v1/' + FB_TABLE + '?select=n,r,x,t&order=t.desc&limit=200', { headers: fbHeaders(false) });
-                if (!res.ok) throw new Error('fb list ' + res.status);
-                return await res.json();
-            }
-            async function cloudAdd(item) {
-                const res = await fetch(SUPABASE_URL + '/rest/v1/' + FB_TABLE, {
-                    method: 'POST', headers: { ...fbHeaders(true), Prefer: 'return=minimal' },
-                    body: JSON.stringify({ n: item.n || '', r: item.r, x: item.x, t: item.t })
-                });
-                if (!res.ok && res.status !== 201) throw new Error('fb add ' + res.status);
-            }
-            async function refreshFromCloud(force) {
-                if (!cloudOn) return;
-                try {
-                    const fresh = await cloudList();
-                    if (force || JSON.stringify(fresh) !== JSON.stringify(items)) {
-                        items = fresh; renderWall();
-                    }
-                    cloudReady = true;
-                } catch (e) { cloudReady = false; }
-            }
-            function startPoll() {
-                if (!cloudOn) return;
-                stopPoll();
-                pollTimer = setInterval(() => refreshFromCloud(false), 20000);
-            }
-            function stopPoll() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
-
-            // 启动：先显示本地缓存，再异步拉云端（失败则维持本地）
-            const liveEl = document.getElementById('fbLive');
-            if (cloudOn) {
-                if (liveEl) liveEl.hidden = false;
-                refreshFromCloud(true);
-            }
-
-            // hide the corner note once the visitor has published feedback
-            if (hint && localStorage.getItem(HINT_KEY) === 'done') hint.hidden = true;
-
-            function paintStars() {
-                const v = preview || rating;
-                starEls.forEach((s, i) => {
-                    s.classList.toggle('is-lit', i < v);
-                    s.setAttribute('aria-checked', String(i < rating));
-                });
-            }
-            function paintStarsHint() {
-                const v = preview || rating;
-                starsHint.textContent = v > 0 ? T('fb.rate' + v) : T('fb.rateHintDefault');
-            }
-            function updatePublishGate() {
-                const ready = rating > 0 && textArea.value.trim().length > 0;
-                publishBtn.disabled = !ready;
-                reqHint.hidden = ready;
-            }
-            function paintCount() {
-                const n = items.length;
-                countBadge.textContent = n;
-                countBadge.hidden = (n === 0);
-                tabCount.textContent = n;
-            }
-
-            function renderWall() {
-                const loc = LOCALE[langFb()] || 'zh-CN';
-                paintCount();
-                if (items.length === 0) {
-                    summary.hidden = true; dist.hidden = true;
-                    list.innerHTML = '';
-                    const p = document.createElement('div');
-                    p.className = 'fb-empty';
-                    p.textContent = T('fb.empty');
-                    list.appendChild(p);
-                    return;
-                }
-                summary.hidden = false; dist.hidden = false;
-                const avg = (items.reduce((a, b) => a + (b.r || 0), 0) / items.length).toFixed(1);
-                summary.innerHTML = '';
-                const cEl = document.createElement('span');
-                cEl.className = 'fb-summary__count';
-                cEl.textContent = T('fb.summaryCount').replace('%{n}', String(items.length));
-                const aEl = document.createElement('span');
-                aEl.className = 'fb-summary__avg';
-                aEl.textContent = '\u2605 ' + T('fb.summaryAvg').replace('%{avg}', avg);
-                summary.appendChild(cEl); summary.appendChild(aEl);
-
-                dist.innerHTML = '';
-                [5, 4, 3, 2, 1].forEach(n => {
-                    const cnt = items.filter(it => it.r === n).length;
-                    const row = document.createElement('div'); row.className = 'fb-dist-row';
-                    const label = document.createElement('span'); label.className = 'n';
-                    label.textContent = n + ' \u2605';
-                    const bar = document.createElement('div'); bar.className = 'fb-dist-bar';
-                    const fill = document.createElement('div'); fill.className = 'fb-dist-fill';
-                    fill.style.width = (cnt / items.length * 100).toFixed(1) + '%';
-                    bar.appendChild(fill);
-                    const num = document.createElement('span'); num.className = 'c';
-                    num.textContent = cnt;
-                    row.appendChild(label); row.appendChild(bar); row.appendChild(num);
-                    dist.appendChild(row);
-                });
-
-                list.innerHTML = '';
-                items.forEach(it => {
-                    const name = (it.n || '').trim();
-                    const item = document.createElement('div'); item.className = 'fb-item';
-                    const av = document.createElement('div'); av.className = 'fb-item__avatar';
-                    av.textContent = name ? Array.from(name)[0].toUpperCase() : '\ud83d\ude42';
-                    const main = document.createElement('div'); main.className = 'fb-item__main';
-                    const meta = document.createElement('div'); meta.className = 'fb-item__meta';
-                    const nameEl = document.createElement('span'); nameEl.className = 'fb-item__name';
-                    nameEl.textContent = name || T('fb.anonymous');
-                    const stars = document.createElement('span'); stars.className = 'fb-item__stars';
-                    const r = Math.min(5, Math.max(0, it.r || 0));
-                    stars.textContent = '\u2605'.repeat(r) + '\u2606'.repeat(5 - r);
-                    const date = document.createElement('span'); date.className = 'fb-item__date';
-                    date.textContent = it.t ? new Date(it.t).toLocaleDateString(loc, { year: 'numeric', month: '2-digit', day: '2-digit' }) : '';
-                    meta.appendChild(nameEl); meta.appendChild(stars); meta.appendChild(date);
-                    const text = document.createElement('div'); text.className = 'fb-item__text';
-                    text.textContent = it.x || '';
-                    main.appendChild(meta); main.appendChild(text);
-                    item.appendChild(av); item.appendChild(main);
-                    list.appendChild(item);
-                });
-            }
-
-            function switchTab(which) {
-                const w = (which === 'write');
-                tabWrite.classList.toggle('is-active', w);
-                tabWall.classList.toggle('is-active', !w);
-                tabWrite.setAttribute('aria-selected', String(w));
-                tabWall.setAttribute('aria-selected', String(!w));
-                writePane.hidden = !w;
-                wallPane.hidden = w;
-                if (!w) { renderWall(); refreshFromCloud(false); }
-            }
-            function openFbModal(tab) { modal.classList.add('is-open'); switchTab(tab || 'write'); startPoll(); }
-            function closeFbModal() { modal.classList.remove('is-open'); stopPoll(); }
-            function showToast(msg) {
-                toast.textContent = msg;
-                toast.classList.add('is-show');
-                clearTimeout(toastTimer);
-                toastTimer = setTimeout(() => toast.classList.remove('is-show'), 2400);
-            }
-
-            starEls.forEach((s, i) => {
-                s.addEventListener('mouseenter', () => { preview = i + 1; paintStars(); paintStarsHint(); });
-                s.addEventListener('mouseleave', () => { preview = 0; paintStars(); paintStarsHint(); });
-                s.addEventListener('click', () => { rating = i + 1; preview = 0; paintStars(); paintStarsHint(); updatePublishGate(); });
-            });
-            textArea.addEventListener('input', updatePublishGate);
-
-            fab.addEventListener('click', () => openFbModal('write'));
-            tabWrite.addEventListener('click', () => switchTab('write'));
-            tabWall.addEventListener('click', () => switchTab('wall'));
-            document.getElementById('fbCancel').addEventListener('click', closeFbModal);
-            document.getElementById('fbClose').addEventListener('click', closeFbModal);
-            modal.addEventListener('click', e => { if (e.target === modal) closeFbModal(); });
-            document.addEventListener('keydown', e => {
-                if (e.key === 'Escape' && modal.classList.contains('is-open')) closeFbModal();
-            });
-
-            publishBtn.addEventListener('click', () => {
-                const r = rating, x = textArea.value.trim();
-                if (r < 1 || !x) return;
-                const item = { n: nameInput.value.trim(), r: r, x: x, t: Date.now() };
-                if (cloudOn) {
-                    publishBtn.disabled = true;
-                    cloudAdd(item).then(async () => {
-                        await refreshFromCloud(true);
-                        afterPublish();
-                    }).catch(() => {
-                        publishBtn.disabled = false;
-                        showToast(T('fb.cloudFail'));
-                    });
-                    return;
-                }
-                items.unshift(item);
-                try { localStorage.setItem(LIST_KEY, JSON.stringify(items)); } catch (e) {}
-                afterPublish();
-            });
-
-            function afterPublish() {
-                rating = 0; preview = 0;
-                nameInput.value = ''; textArea.value = '';
-                paintStars(); paintStarsHint(); updatePublishGate();
-                if (hint) {
-                    hint.hidden = true;
-                    try { localStorage.setItem(HINT_KEY, 'done'); } catch (e) {}
-                }
-                renderWall();
-                switchTab('wall');
-                showToast(T('fb.publishedToast'));
-            }
-
-            window.addEventListener('trent-langchange', () => {
-                paintStarsHint();
-                renderWall();
-            });
-
-            paintCount(); paintStars(); paintStarsHint(); updatePublishGate();
-        })();
 
         console.log('%c👋 Hi! 我是律照楠', 'font-size:20px;font-weight:bold;color:#007AFF;');
         console.log('%cTrent intelligence 由 DeepSeek 驱动 | macOS Tahoe Style UI', 'font-size:12px;color:#6E6E73;');

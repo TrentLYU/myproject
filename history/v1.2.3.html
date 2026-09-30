@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>律照楠 | Personal Homepage</title>
+    <meta name="description" content="律照楠的个人主页 - 天津大学香港理工大学深圳未来技术学院 · 计算机科学与技术">
+    <style>
+        :root {
+            --primary: #007AFF; --primary-light: #E3F2FD; --bg: #F5F5F7;
+            --card-bg: rgba(255,255,255,0.85); --text-primary: #1D1D1F;
+            --text-secondary: #6E6E73; --text-tertiary: #86868B;
+            --border: rgba(0,0,0,0.06); --shadow: 0 2px 20px rgba(0,0,0,0.06);
+            --shadow-hover: 0 8px 40px rgba(0,0,0,0.1); --radius: 20px;
+            --radius-sm: 12px;
+            --font: -apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;
+            --max-width: 1100px;
+            --transition: all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth;font-size:16px}
+        body{font-family:var(--font);background:var(--bg);color:var(--text-primary);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+        #particles-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+        .nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(245,245,247,0.72);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:0.5px solid var(--border)}
+        .nav__inner{max-width:var(--max-width);margin:0 auto;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between}
+        .nav__brand{font-size:1.1rem;font-weight:700;color:var(--text-primary);text-decoration:none}
+        .nav__links{display:flex;gap:28px;list-style:none}
+        .nav__links a{text-decoration:none;color:var(--text-secondary);font-size:0.875rem;font-weight:500;transition:var(--transition)}
+        .nav__links a:hover{color:var(--primary)}
+        .nav__toggle{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-primary)}
+        .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;background:linear-gradient(180deg,#FFF 0%,var(--bg) 100%);position:relative}
+        .hero__content{max-width:680px}
+        .hero__avatar{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#5856D6);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;font-weight:700;color:#fff;box-shadow:0 8px 32px rgba(0,122,255,0.3);animation:float 3s ease-in-out infinite}
+        .hero__name{font-size:3rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:12px;background:linear-gradient(135deg,var(--text-primary) 0%,var(--primary) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .hero__subtitle{font-size:1.25rem;color:var(--text-secondary);margin-bottom:8px;font-weight:500}
+        .hero__location{font-size:0.9rem;color:var(--text-tertiary);margin-bottom:24px}
+        .hero__tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:32px}
+        .chip{padding:6px 14px;border-radius:100px;font-size:0.8rem;font-weight:500;background:var(--primary-light);color:var(--primary);animation:pulse-glow 2s ease-in-out infinite}
+        .hero__actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+        .btn{display:inline-flex;align-items:center;gap:6px;padding:12px 24px;border-radius:100px;font-size:0.9rem;font-weight:600;text-decoration:none;transition:var(--transition);cursor:pointer;border:none}
+        .btn--primary{background:var(--primary);color:#fff;box-shadow:0 4px 16px rgba(0,122,255,0.3)}
+        .btn--primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,122,255,0.4)}
+        .btn--ghost{background:rgba(0,0,0,0.04);color:var(--text-primary)}
+        .btn--ghost:hover{background:rgba(0,0,0,0.08)}
+        .section{max-width:var(--max-width);margin:0 auto;padding:80px 24px}
+        .section__header{text-align:center;margin-bottom:48px}
+        .section__title{font-size:2rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px}
+        .section__subtitle{font-size:1rem;color:var(--text-secondary)}
+        .card{background:var(--card-bg);backdrop-filter:blur(20px);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);border:0.5px solid var(--border);transition:var(--transition)}
+        .card:hover{box-shadow:var(--shadow-hover);transform:translateY(-4px)}
+        .about__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+        .about__card-icon{font-size:2rem;margin-bottom:12px}
+        .about__card-title{font-size:1rem;font-weight:600;margin-bottom:6px}
+        .about__card-text{font-size:0.9rem;color:var(--text-secondary);line-height:1.5}
+        .timeline{position:relative;padding-left:32px}
+        .timeline::before{content:'';position:absolute;left:8px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--primary),#5856D6);border-radius:2px}
+        .timeline__item{position:relative;margin-bottom:32px;padding:20px 24px;background:var(--card-bg);border-radius:var(--radius-sm);box-shadow:var(--shadow);border:0.5px solid var(--border)}
+        .timeline__item::before{content:'';position:absolute;left:-28px;top:26px;width:12px;height:12px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 4px var(--primary-light)}
+        .timeline__period{font-size:0.8rem;color:var(--primary);font-weight:600;margin-bottom:4px}
+        .timeline__title{font-size:1.1rem;font-weight:600;margin-bottom:4px}
+        .timeline__desc{font-size:0.875rem;color:var(--text-secondary)}
+        .project__embed-card{background:var(--card-bg);backdrop-filter:blur(20px);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:0.5px solid var(--border);margin-bottom:32px}
+        .project__embed-header{padding:20px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-bottom:0.5px solid var(--border)}
+        .project__embed-info{display:flex;flex-direction:column;gap:4px}
+        .project__embed-badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:0.7rem;font-weight:600;background:linear-gradient(135deg,var(--primary),#5856D6);color:#fff;text-transform:uppercase;letter-spacing:0.05em;width:fit-content}
+        .project__embed-title{font-size:1.15rem;font-weight:700}
+        .project__embed-actions{display:flex;gap:8px;flex-wrap:wrap}
+        .project__embed-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;font-size:0.8rem;font-weight:500;text-decoration:none;transition:var(--transition);cursor:pointer;border:none}
+        .project__embed-btn--outline{background:transparent;border:1.5px solid var(--border);color:var(--text-secondary)}
+        .project__embed-btn--outline:hover{border-color:var(--primary);color:var(--primary)}
+        .project__embed-btn--fill{background:var(--primary);color:#fff}
+        .project__embed-btn--fill:hover{background:#0056CC}
+        .project__iframe-wrapper{width:100%;height:520px;position:relative;background:#FAFAFA}
+        .project__iframe-wrapper iframe{width:100%;height:100%;border:none;display:block}
+        .project__placeholder{width:100%;height:520px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:linear-gradient(135deg,#FAFAFA 0%,#F0F0F2 100%);color:var(--text-tertiary);text-align:center;padding:40px}
+        .project__placeholder-icon{font-size:3rem;opacity:0.5}
+        .project__placeholder-text{font-size:0.95rem;max-width:400px}
+        .project__embed-desc{padding:16px 28px;font-size:0.875rem;color:var(--text-secondary);line-height:1.6;border-top:0.5px solid var(--border)}
+        .project__tabs{display:flex;gap:4px;padding:4px;background:rgba(0,0,0,0.04);border-radius:12px;margin-bottom:24px;overflow-x:auto}
+        .project__tab{padding:10px 20px;border-radius:10px;border:none;background:transparent;font-size:0.85rem;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:var(--transition);white-space:nowrap;font-family:var(--font)}
+        .project__tab:hover{color:var(--text-primary)}
+        .project__tab.is-active{background:#fff;color:var(--primary);box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+        .project__panel{display:none}
+        .project__panel.is-active{display:block;animation:fadeInUp 0.4s ease}
+        .avatar-section{max-width:800px;margin:0 auto;text-align:center}
+        .avatar-container{position:relative;width:200px;height:200px;margin:0 auto 30px}
+        .avatar-ring{position:absolute;top:0;left:0;right:0;bottom:0;border-radius:50%;border:3px solid transparent;border-top-color:var(--primary);border-right-color:#5856D6;animation:spin 3s linear infinite}
+        .avatar-ring:nth-child(2){top:10px;left:10px;right:10px;bottom:10px;border-top-color:#5856D6;border-right-color:var(--primary);animation-duration:2s;animation-direction:reverse}
+        .avatar-ring:nth-child(3){top:20px;left:20px;right:20px;bottom:20px;border-top-color:var(--primary);border-right-color:#FF9500;animation-duration:4s}
+        .avatar-face{position:absolute;top:30px;left:30px;right:30px;bottom:30px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#5856D6);display:flex;align-items:center;justify-content:center;font-size:3rem;font-weight:800;color:#fff;box-shadow:0 0 40px rgba(0,122,255,0.4),0 0 80px rgba(88,86,214,0.2);animation:breathe 3s ease-in-out infinite}
+        .avatar-status{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;background:#E8F5E9;color:#2E7D32;font-size:0.8rem;font-weight:600;margin-bottom:20px}
+        .avatar-status::before{content:'';width:8px;height:8px;border-radius:50%;background:#4CAF50;animation:blink 1.5s ease-in-out infinite}
+        .avatar-chat{background:var(--card-bg);backdrop-filter:blur(20px);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);border:0.5px solid var(--border);text-align:left;max-width:600px;margin:0 auto}
+        .avatar-chat__header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:0.5px solid var(--border)}
+        .avatar-chat__avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#5856D6);display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:#fff;font-weight:700}
+        .avatar-chat__name{font-size:0.9rem;font-weight:600}
+        .avatar-chat__status{font-size:0.75rem;color:#4CAF50}
+        .avatar-chat__messages{min-height:120px;max-height:300px;overflow-y:auto;margin-bottom:16px;display:flex;flex-direction:column;gap:10px}
+        .avatar-msg{padding:10px 14px;border-radius:12px;font-size:0.85rem;line-height:1.5;max-width:85%;animation:msgIn 0.3s ease}
+        .avatar-msg--bot{background:var(--primary-light);color:var(--text-primary);align-self:flex-start;border-bottom-left-radius:4px}
+        .avatar-msg--user{background:var(--primary);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+        .avatar-chat__input-row{display:flex;gap:8px}
+        .avatar-chat__input{flex:1;padding:10px 14px;border-radius:100px;border:1.5px solid var(--border);font-size:0.85rem;font-family:var(--font);outline:none;transition:var(--transition)}
+        .avatar-chat__input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,122,255,0.1)}
+        .avatar-chat__send{padding:10px 18px;border-radius:100px;border:none;background:var(--primary);color:#fff;font-size:0.85rem;font-weight:600;cursor:pointer;transition:var(--transition)}
+        .avatar-chat__send:hover{background:#0056CC;transform:scale(1.05)}
+        .avatar-chat__send:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+        .typing-indicator{display:inline-flex;gap:4px;padding:8px 12px;background:var(--primary-light);border-radius:12px;border-bottom-left-radius:4px}
+        .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--primary);animation:typingBounce 1.2s infinite}
+        .typing-dot:nth-child(2){animation-delay:0.2s}
+        .typing-dot:nth-child(3){animation-delay:0.4s}
+        .skills__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+        .skill__category{margin-bottom:16px}
+        .skill__category-title{font-size:0.8rem;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px}
+        .skill__tags{display:flex;flex-wrap:wrap;gap:8px}
+        .skill__tag{padding:8px 14px;border-radius:10px;font-size:0.85rem;font-weight:500;background:#fff;border:1px solid var(--border);transition:var(--transition)}
+        .skill__tag:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light)}
+        .mbti__badge{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:100px;background:linear-gradient(135deg,#1D1D1F,#3A3A3C);color:#fff;font-size:0.9rem;font-weight:600;margin-top:16px}
+        .interactive__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
+        .form__group{margin-bottom:16px}
+        .form__label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:6px}
+        .form__input,.form__textarea{width:100%;padding:12px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border);font-size:0.9rem;font-family:var(--font);background:#fff;transition:var(--transition);outline:none}
+        .form__input:focus,.form__textarea:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(0,122,255,0.1)}
+        .form__textarea{resize:vertical;min-height:100px}
+        .form__submit{width:100%;padding:14px;border-radius:var(--radius-sm);border:none;background:var(--primary);color:#fff;font-size:0.95rem;font-weight:600;cursor:pointer;transition:var(--transition)}
+        .form__submit:hover{background:#0056CC;transform:translateY(-1px)}
+        .form__success{display:none;padding:12px 16px;border-radius:var(--radius-sm);background:#E8F5E9;color:#2E7D32;font-size:0.875rem;font-weight:500;margin-top:12px}
+        .contact__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;max-width:600px;margin:0 auto}
+        .contact__item{display:flex;align-items:center;gap:12px;padding:16px 20px;background:var(--card-bg);border-radius:var(--radius-sm);border:0.5px solid var(--border);text-decoration:none;color:var(--text-primary);transition:var(--transition)}
+        .contact__item:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+        .contact__icon{font-size:1.3rem}
+        .contact__info{display:flex;flex-direction:column}
+        .contact__label{font-size:0.75rem;color:var(--text-tertiary);font-weight:500}
+        .contact__value{font-size:0.9rem;font-weight:600}
+        .footer{text-align:center;padding:40px 24px;border-top:0.5px solid var(--border);color:var(--text-tertiary);font-size:0.85rem}
+        .footer__heart{color:#FF3B30}
+        .scroll-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:1.2rem;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,122,255,0.3);transition:var(--transition);z-index:999}
+        .scroll-top.visible{display:flex}
+        .scroll-top:hover{transform:translateY(-3px)}
+
+        /* ✅ UPDATED: Liverpool KOP Modal Styles with Photo Background */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+            z-index: 2000; display: none; align-items: center; justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay.is-open { display: flex; }
+        .liverpool-card {
+            width: 420px; max-width: 90vw; border-radius: 20px; overflow: hidden;
+            background: #000; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5); /* ✅ 改为黑色阴影更自然 */
+            position: relative;
+            animation: modalIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            border: 1px solid rgba(255,255,255,0.15); /* ✅ 改为白色微光边框 */
+        }
+        .liverpool-card__bg {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            /* ✅ CHANGED: Using the uploaded photo URL */
+            background-image: url('Arnold.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            z-index: 1;
+        }
+        /* ✅ NEW: Red overlay to ensure text readability over the photo */
+        .liverpool-card__content {
+            position: relative; padding: 32px 28px; color: #fff; text-align: center;
+            z-index: 3; /* Ensure content is above overlay */
+        }
+        .liverpool-card__badge {
+            width: 64px; height: 64px; 
+            margin: 0 0 12px 0; /* ✅ 去掉 auto，改为左对齐 (margin-left:0) */
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(4px);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .liverpool-card__title {
+            font-size: 1.4rem; font-weight: 800; margin-bottom: 12px; letter-spacing: 0.02em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .liverpool-card__text {
+            font-size: 0.95rem; line-height: 1.7; opacity: 0.95; margin-bottom: 16px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        .liverpool-card__quote {
+            font-size: 1.1rem; font-weight: 700; font-style: italic; letter-spacing: 0.03em;
+            padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.3);
+            color: #FFD700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
+        .liverpool-card__close {
+            position: absolute; top: 12px; right: 14px; background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.3); color: #fff; 
+            width: 32px; height: 32px; border-radius: 50%;
+            font-size: 1.1rem; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 4;
+        }
+        .liverpool-card__close:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        /* ✅ END UPDATED */
+
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        @keyframes breathe{0%,100%{transform:scale(1);box-shadow:0 0 40px rgba(0,122,255,0.4),0 0 80px rgba(88,86,214,0.2)}50%{transform:scale(1.05);box-shadow:0 0 60px rgba(0,122,255,0.6),0 0 100px rgba(88,86,214,0.3)}}
+        @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+        @keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(0,122,255,0)}50%{box-shadow:0 0 12px 2px rgba(0,122,255,0.15)}}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes msgIn{from{opacity:0;transform:translateY(10px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+        @keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+        @keyframes ripple{0%{transform:scale(1);opacity:0.4}100%{transform:scale(2.5);opacity:0}}
+        .ripple-effect{position:absolute;border-radius:50%;background:rgba(0,122,255,0.3);animation:ripple 1s ease-out;pointer-events:none}
+        @media(max-width:768px){
+            .nav__links{display:none;position:absolute;top:52px;left:0;right:0;background:rgba(245,245,247,0.98);backdrop-filter:blur(20px);flex-direction:column;padding:20px 24px;gap:16px;border-bottom:0.5px solid var(--border)}
+            .nav__links.is-open{display:flex}
+            .nav__toggle{display:block}
+            .hero__name{font-size:2.2rem}
+            .section{padding:60px 20px}
+            .section__title{font-size:1.6rem}
+            .project__iframe-wrapper,.project__placeholder{height:360px}
+            .interactive__grid{grid-template-columns:1fr}
+            .avatar-container{width:150px;height:150px}
+            .avatar-face{top:25px;left:25px;right:25px;bottom:25px;font-size:2rem}
+        }
+    </style>
+</head>
+<body>
+<!-- 📦 历史归档横幅（归档时自动插入） -->
+<div style="background:#1d1d1f;color:#e8e8ed;font:12px/1.7 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:10px 16px;text-align:center;border-bottom:1px solid #3a3a3e;">
+  📦 你正在浏览历史归档版本 <b>v1.2.3</b>（第一代 · 奠基 · 项目 PDF 直链）
+  ｜ <a href="index.html" style="color:#6db3ff;text-decoration:none;">📚 网站演进史</a>  ｜ <a href="../2.2.1.html" style="color:#6db3ff;text-decoration:none;">🚀 返回最新版 v2.2.1</a>
+</div>
+
+    <canvas id="particles-canvas"></canvas>
+    <nav class="nav">
+        <div class="nav__inner">
+            <a href="#" class="nav__brand">律照楠</a>
+            <ul class="nav__links" id="navLinks">
+                <li><a href="#about">关于我</a></li>
+                <li><a href="#education">教育经历</a></li>
+                <li><a href="#projects">项目</a></li>
+                <li><a href="#avatar">数字分身</a></li>
+                <li><a href="#skills">技能</a></li>
+                <li><a href="#interactive">互动</a></li>
+                <li><a href="#contact">联系</a></li>
+            </ul>
+            <button class="nav__toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </nav>
+    <section class="hero" id="hero">
+        <div class="hero__content">
+            <div class="hero__avatar">律</div>
+            <h1 class="hero__name">律照楠</h1>
+            <p class="hero__subtitle">计算机科学与技术 · 天津大学香港理工大学深圳未来技术学院</p>
+            <p class="hero__location">📍 广东深圳 · 来自山西太原</p>
+            <div class="hero__tags">
+                <span class="chip">🎯 AAAI</span>
+                <span class="chip">🔬 AI for Science</span>
+                <span class="chip">🧠 INTJ</span>
+                <span class="chip"> 笛子10级</span>
+            </div>
+            <div class="hero__actions">
+                <a href="#projects" class="btn btn--primary">查看项目 →</a>
+                <a href="#avatar" class="btn btn--ghost">🤖 数字分身</a>
+                <a href="#contact" class="btn btn--ghost">联系我</a>
+            </div>
+        </div>
+    </section>
+    <section class="section" id="about">
+        <div class="section__header"><h2 class="section__title">关于我</h2><p class="section__subtitle">一个有明确目标的计算机专业学生</p></div>
+        <div class="about__grid">
+            <div class="card"><div class="about__card-icon">🎓</div><h3 class="about__card-title">学术方向</h3><p class="about__card-text">计算机科学与技术，目标是在 AAAI 发表一作论文。</p></div>
+            <div class="card"><div class="about__card-icon">🚀</div><h3 class="about__card-title">核心目标</h3><p class="about__card-text">在 AI 领域拥有自己的一项大项目成果，用技术解决真实的科学问题。</p></div>
+            <div class="card"><div class="about__card-icon">🌏</div><h3 class="about__card-title">城市轨迹</h3><p class="about__card-text">从山西太原到广东深圳，跨越南北，在大湾区探索前沿科技。</p></div>
+            <div class="card"><div class="about__card-icon">💡</div><h3 class="about__card-title">记忆点</h3><p class="about__card-text">笛子10级 + 漫画10级 + 书法8级，理性与感性并存的 INTJ。</p></div>
+        </div>
+    </section>
+    <section class="section" id="education">
+        <div class="section__header"><h2 class="section__title">教育经历</h2><p class="section__subtitle">从太原到深圳的成长之路</p></div>
+        <div class="timeline">
+            <div class="timeline__item"><span class="timeline__period">本科 · 在读</span><h3 class="timeline__title">天津大学香港理工大学深圳未来技术学院</h3><p class="timeline__desc">计算机科学与技术专业 · 广东深圳</p></div>
+            <div class="timeline__item"><span class="timeline__period">高中</span><h3 class="timeline__title">山西大学附属中学</h3><p class="timeline__desc">山西太原</p></div>
+            <div class="timeline__item"><span class="timeline__period">初中</span><h3 class="timeline__title">常青藤中学校</h3><p class="timeline__desc">山西太原</p></div>
+            <div class="timeline__item"><span class="timeline__period">小学</span><h3 class="timeline__title">九一小学</h3><p class="timeline__desc">山西太原</p></div>
+        </div>
+    </section>
+    <section class="section" id="projects">
+        <div class="section__header"><h2 class="section__title">项目 / 作品集</h2><p class="section__subtitle">AI for Separation — 独立研究项目全部成果</p></div>
+        <div class="project__tabs">
+            <button class="project__tab is-active" data-tab="ppt">📑 项目 PPT</button>
+            <button class="project__tab" data-tab="vr1pro">🧊 3D VR 1 Pro</button>
+            <button class="project__tab" data-tab="vr11">🔥 3D VR 1.1 Heating</button>
+        </div>
+        <div class="project__panel is-active" id="panel-ppt">
+            <div class="project__embed-card">
+                <div class="project__embed-header">
+                    <div class="project__embed-info"><span class="project__embed-badge">AI for Separation</span><h3 class="project__embed-title">AI4s — PVC 项目介绍</h3></div>
+                    <div class="project__embed-actions">
+                        <a href="../AI4sPVC.pdf" target="_blank" class="project__embed-btn project__embed-btn--outline"> 新窗口打开</a>
+                        <a href="../AI4sPVC.pdf" download class="project__embed-btn project__embed-btn--fill">⬇ 下载 PDF</a>
+                    </div>
+                </div>
+                <div class="project__placeholder" id="pptPlaceholder">
+                    <div class="project__placeholder-icon"></div>
+                    <p class="project__placeholder-text">请将 <code>AI4s——PVC.pptx</code> 转换为 PDF 后<br>放入 <code>../AI4sPVC.pdf</code></p>
+                    <button class="project__embed-btn project__embed-btn--fill" onclick="loadPPT()" style="margin-top:12px;">🔄 尝试加载 PDF</button>
+                </div>
+                <div class="project__embed-desc">涵盖 AI for Separation 项目的研究背景、方法设计、阶段性成果及未来规划。作为唯一项目人独立完成全部内容。</div>
+            </div>
+        </div>
+        <div class="project__panel" id="panel-vr1pro">
+            <div class="project__embed-card">
+                <div class="project__embed-header">
+                    <div class="project__embed-info"><span class="project__embed-badge">3D Visualization</span><h3 class="project__embed-title">3D VR 1 Pro Version</h3></div>
+                    <div class="project__embed-actions"><a href="../3D VR 1pro version.html" target="_blank" class="project__embed-btn project__embed-btn--outline">↗ 新窗口打开</a></div>
+                </div>
+                <div class="project__iframe-wrapper"><iframe src="../3D VR 1pro version.html" title="3D VR 1 Pro Version"></iframe></div>
+                <div class="project__embed-desc">AI for Separation 项目的 3D VR 可视化成果（Pro 版本）。支持交互式三维浏览，展示分离过程的空间结构。</div>
+            </div>
+        </div>
+        <div class="project__panel" id="panel-vr11">
+            <div class="project__embed-card">
+                <div class="project__embed-header">
+                    <div class="project__embed-info"><span class="project__embed-badge">3D Visualization</span><h3 class="project__embed-title">3D VR 1.1 Version — Heating Process</h3></div>
+                    <div class="project__embed-actions"><a href="../3D VR 1.1version（heating process）.html" target="_blank" class="project__embed-btn project__embed-btn--outline">↗ 新窗口打开</a></div>
+                </div>
+                <div class="project__iframe-wrapper"><iframe src="../3D VR 1.1version（heating process）.html" title="3D VR 1.1 Heating Process"></iframe></div>
+                <div class="project__embed-desc">加热过程的 3D VR 可视化演示。展示分离过程中热力学变化的三维动态效果，是 1.0 版本的迭代升级。</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Digital Avatar (DeepSeek AI) ===== -->
+    <section class="section" id="avatar">
+        <div class="section__header">
+            <h2 class="section__title"> 数字分身</h2>
+            <p class="section__subtitle">由 DeepSeek 驱动 · 和 AI 版的我聊聊天吧</p>
+        </div>
+        <div class="avatar-section">
+            <div class="avatar-container">
+                <div class="avatar-ring"></div><div class="avatar-ring"></div><div class="avatar-ring"></div>
+                <div class="avatar-face">律</div>
+            </div>
+            <div class="avatar-status">在线 · DeepSeek 驱动</div>
+            <div class="avatar-chat">
+                <div class="avatar-chat__header">
+                    <div class="avatar-chat__avatar">律</div>
+                    <div><div class="avatar-chat__name">律照楠 · 数字分身</div><div class="avatar-chat__status">● 在线</div></div>
+                </div>
+                <div class="avatar-chat__messages" id="avatarMessages">
+                    <div class="avatar-msg avatar-msg--bot"> 你好！我是律照楠的数字分身，由 DeepSeek 大模型驱动。你可以问我关于我的学习、项目、兴趣的任何问题！</div>
+                </div>
+                <div class="avatar-chat__input-row">
+                    <input type="text" class="avatar-chat__input" id="avatarInput" placeholder="输入你想问的问题..." autocomplete="off">
+                    <button class="avatar-chat__send" id="avatarSendBtn">发送</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="skills">
+        <div class="section__header"><h2 class="section__title">技能 & 兴趣</h2><p class="section__subtitle">理性思维 × 艺术修养 × 运动活力</p></div>
+        <div class="skills__grid">
+            <div class="card">
+                <div class="skill__category"><h4 class="skill__category-title">🛠 专业技能</h4><div class="skill__tags"><span class="skill__tag">Office 办公套件</span></div></div>
+                <div class="skill__category"><h4 class="skill__category-title">🎨 艺术才艺</h4><div class="skill__tags"><span class="skill__tag">🎵 笛子 · 10级</span><span class="skill__tag">🎨 漫画 · 10级</span><span class="skill__tag">✍️ 书法 · 8级</span></div></div>
+            </div>
+            <div class="card">
+                <div class="skill__category"><h4 class="skill__category-title">⚽ 运动爱好</h4><div class="skill__tags">
+                    <!-- ✅ MODIFIED: Added id and cursor style to football tag -->
+                    <span class="skill__tag" id="footballTag" style="cursor:pointer;">⚽ 足球</span>
+                    <span class="skill__tag">🎾 网球</span><span class="skill__tag">🏸 羽毛球</span><span class="skill__tag">🏎️ F1</span>
+                </div></div>
+                <div class="skill__category"><h4 class="skill__category-title">🧠 性格类型</h4><div class="mbti__badge"><span>INTJ</span><span style="font-weight:400;font-size:0.8rem;opacity:0.8">— 建筑师型 · 战略思维</span></div></div>
+            </div>
+        </div>
+    </section>
+    <section class="section" id="interactive">
+        <div class="section__header"><h2 class="section__title">互动区</h2><p class="section__subtitle">向我提问，或留下你的建议</p></div>
+        <div class="interactive__grid">
+            <div class="card">
+                <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:16px;">💬 向我提问</h3>
+                <form id="questionForm">
+                    <div class="form__group"><label class="form__label" for="qName">你的称呼</label><input class="form__input" type="text" id="qName" placeholder="怎么称呼你？" required></div>
+                    <div class="form__group"><label class="form__label" for="qContent">你的问题</label><textarea class="form__textarea" id="qContent" placeholder="想了解什么？关于我的项目、学习、兴趣..." required></textarea></div>
+                    <button type="submit" class="form__submit">发送提问 ✉️</button>
+                    <div class="form__success" id="qSuccess">✅ 提问已收到！我会尽快回复你。</div>
+                </form>
+            </div>
+            <div class="card">
+                <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:16px;"> 用户信箱</h3>
+                <form id="mailboxForm">
+                    <div class="form__group"><label class="form__label" for="mEmail">你的邮箱</label><input class="form__input" type="email" id="mEmail" placeholder="your@email.com" required></div>
+                    <div class="form__group"><label class="form__label" for="mMessage">想说的话</label><textarea class="form__textarea" id="mMessage" placeholder="建议、合作意向、或者只是打个招呼..." required></textarea></div>
+                    <button type="submit" class="form__submit">投递到信箱 📬</button>
+                    <div class="form__success" id="mSuccess">✅ 已投递！感谢你的留言。</div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <section class="section" id="contact">
+        <div class="section__header"><h2 class="section__title">联系我</h2><p class="section__subtitle">期待与你建立连接</p></div>
+        <div class="contact__grid">
+            <a href="mailto:nan030032@outlook.com" class="contact__item"><span class="contact__icon">📧</span><div class="contact__info"><span class="contact__label">邮箱</span><span class="contact__value">nan030032@outlook.com</span></div></a>
+            <a href="tel:19935125813" class="contact__item"><span class="contact__icon">📱</span><div class="contact__info"><span class="contact__label">电话</span><span class="contact__value">199-3512-5813</span></div></a>
+            <div class="contact__item"><span class="contact__icon"></span><div class="contact__info"><span class="contact__label">所在地</span><span class="contact__value">广东 · 深圳</span></div></div>
+        </div>
+    </section>
+    <footer class="footer">
+        <p>© 2025 律照楠 · Built with <span class="footer__heart">♥</span> using Vibe Coding</p>
+        <p style="margin-top:4px;font-size:0.75rem;">天津大学香港理工大学深圳未来技术学院 · 计算机科学与技术</p>
+    </footer>
+    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
+    <!-- ✅ UPDATED: Liverpool KOP Modal HTML with Overlay -->
+    <div class="modal-overlay" id="kopModal">
+        <div class="liverpool-card">
+            <div class="liverpool-card__bg"></div>
+            <button class="liverpool-card__close" id="kopClose"></button>
+            <div class="liverpool-card__content">
+                <div class="liverpool-card__badge">⚽</div>
+                <h3 class="liverpool-card__title">You'll Never Walk Alone</h3>
+                <p class="liverpool-card__text">
+                    我是一名 KOP，深爱曾经的太子阿诺德。<br>
+                    惯用脚是左脚，所以喜欢踢左后卫。<br>
+                    我也是贝林厄姆的粉丝。
+                </p>
+                <div class="liverpool-card__quote">"You Will Never Walk Alone"</div>
+            </div>
+        </div>
+    </div>
+    <!-- ✅ END UPDATED -->
+
+    <script>
+        // ================================================================
+        //  请在这里粘贴你的 NEW DeepSeek API Key（旧Key已泄露，请重新生成）
+        // 获取地址：https://platform.deepseek.com/api_keys
+        // ================================================================
+        const DEEPSEEK_API_KEY = 'sk-REDACTED';
+        // ================================================================
+
+        const CHAT_URL = 'https://api.deepseek.com/chat/completions';
+
+        const SYSTEM_PROMPT = `你是律照楠的数字分身，性格沉稳、理性、略带幽默，说话简洁有力。
+你的身份信息如下：
+- 姓名：律照楠
+- 学校：天津大学香港理工大学深圳未来技术学院
+- 专业：计算机科学与技术（本科在读）
+- 所在地：广东深圳，家乡山西太原
+- 核心目标：在 AAAI 发表一作论文，短期内在 AI for Science 领域做出部分研究成果
+- 当前项目：AI for Separation（唯一项目人），已完成 3D VR 可视化（Pro版 + 加热过程1.1版）和项目PPT
+- 兴趣爱好：足球、网球、羽毛球、F1赛车
+- 艺术才艺：笛子10级、漫画10级、书法8级
+- 性格类型：INTJ（建筑师型），喜欢战略性思考和独立解决问题
+- 联系方式：邮箱 nan030032@outlook.com，电话 199-3512-5813
+回答规则：
+1. 始终用第一人称"我"来回答
+2. 语气自然亲切，幽默一点，像朋友聊天一样，不要太正式
+3. 回答控制在3句话以内，简洁明了
+4. 关于我个人的问题，严格基于以上信息回答，不确定的就说"这个你可以直接问律照楠本人哦"
+5. 对于百科知识、技术问题、通用话题等，可以正常运用你的知识回答，但要用律照楠的口吻和视角表达
+6. 适当使用emoji让对话更生动`;
+
+        let chatHistory = [{ role: 'system', content: SYSTEM_PROMPT }];
+        const messagesContainer = document.getElementById('avatarMessages');
+        const inputField = document.getElementById('avatarInput');
+        const sendBtn = document.getElementById('avatarSendBtn');
+
+        function addMessage(text, isUser) {
+            const msg = document.createElement('div');
+            msg.className = `avatar-msg ${isUser ? 'avatar-msg--user' : 'avatar-msg--bot'}`;
+            msg.textContent = text;
+            messagesContainer.appendChild(msg);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showTyping() {
+            if (document.getElementById('typingIndicator')) return;
+            const t = document.createElement('div');
+            t.className = 'typing-indicator'; t.id = 'typingIndicator';
+            t.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+            messagesContainer.appendChild(t);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function removeTyping() {
+            const t = document.getElementById('typingIndicator');
+            if (t) t.remove();
+        }
+
+        function setSending(v) {
+            sendBtn.disabled = v; inputField.disabled = v;
+            sendBtn.textContent = v ? '思考中...' : '发送';
+        }
+
+        async function sendAvatarMsg() {
+            const text = inputField.value.trim();
+            if (!text) return;
+
+            if (DEEPSEEK_API_KEY === 'YOUR_NEW_API_KEY_HERE') {
+                addMessage('⚠️ 请先配置 API Key！打开 index.html，搜索 "YOUR_NEW_API_KEY_HERE" 替换为你的真实密钥。', false);
+                return;
+            }
+
+            addMessage(text, true);
+            inputField.value = '';
+            setSending(true);
+            showTyping();
+            chatHistory.push({ role: 'user', content: text });
+
+            try {
+                const res = await fetch(CHAT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
+                    body: JSON.stringify({ model: 'deepseek-chat', messages: chatHistory, max_tokens: 300, temperature: 0.7 })
+                });
+                removeTyping();
+                if (!res.ok) {
+                    console.error('API Error:', res.status);
+                    addMessage(`⚠️ 请求失败(${res.status})，请检查Key是否正确或余额是否充足。`, false);
+                    chatHistory.pop(); setSending(false); return;
+                }
+                const data = await res.json();
+                const reply = data.choices[0].message.content;
+                chatHistory.push({ role: 'assistant', content: reply });
+                addMessage(reply, false);
+            } catch (e) {
+                removeTyping();
+                console.error('Fetch Error:', e);
+                addMessage('️ 网络请求失败，请检查网络连接。', false);
+                chatHistory.pop();
+            }
+            setSending(false);
+            inputField.focus();
+        }
+
+        sendBtn.addEventListener('click', sendAvatarMsg);
+        inputField.addEventListener('keypress', e => { if (e.key === 'Enter' && !sendBtn.disabled) sendAvatarMsg(); });
+
+        // ===== Particles =====
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+        class Particle {
+            constructor() { this.x=Math.random()*canvas.width; this.y=Math.random()*canvas.height; this.size=Math.random()*2+0.5; this.speedX=(Math.random()-0.5)*0.5; this.speedY=(Math.random()-0.5)*0.5; this.opacity=Math.random()*0.5+0.1; }
+            update() { this.x+=this.speedX; this.y+=this.speedY; if(this.x<0||this.x>canvas.width)this.speedX*=-1; if(this.y<0||this.y>canvas.height)this.speedY*=-1; }
+            draw() { ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fillStyle=`rgba(0,122,255,${this.opacity})`; ctx.fill(); }
+        }
+        function initParticles() { const c=Math.min(80,Math.floor(window.innerWidth/15)); for(let i=0;i<c;i++) particles.push(new Particle()); }
+        function connectParticles() { for(let i=0;i<particles.length;i++) for(let j=i+1;j<particles.length;j++){const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){ctx.beginPath();ctx.strokeStyle=`rgba(0,122,255,${0.1*(1-d/120)})`;ctx.lineWidth=0.5;ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke();}} }
+        function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{p.update();p.draw()}); connectParticles(); requestAnimationFrame(animateParticles); }
+        initParticles(); animateParticles();
+
+        // ===== Nav =====
+        const navToggle=document.getElementById('navToggle'),navLinks=document.getElementById('navLinks');
+        navToggle.addEventListener('click',()=>navLinks.classList.toggle('is-open'));
+        navLinks.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>navLinks.classList.remove('is-open')));
+
+        // ===== Scroll Top =====
+        const scrollTopBtn=document.getElementById('scrollTop');
+        window.addEventListener('scroll',()=>scrollTopBtn.classList.toggle('visible',window.scrollY>400));
+        scrollTopBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+        // ===== Tabs =====
+        document.querySelectorAll('.project__tab').forEach(tab=>{tab.addEventListener('click',()=>{const t=tab.dataset.tab;document.querySelectorAll('.project__tab').forEach(x=>x.classList.remove('is-active'));document.querySelectorAll('.project__panel').forEach(x=>x.classList.remove('is-active'));tab.classList.add('is-active');document.getElementById(`panel-${t}`).classList.add('is-active');});});
+
+        // ===== Load PPT =====
+        function loadPPT(){const p=document.getElementById('pptPlaceholder');const w=document.createElement('div');w.className='project__iframe-wrapper';w.innerHTML='<iframe src="../AI4sPVC.pdf" title="AI4s PVC PPT"></iframe>';p.replaceWith(w);}
+
+        // ===== Forms =====
+        document.getElementById('questionForm').addEventListener('submit',function(e){e.preventDefault();document.getElementById('qSuccess').style.display='block';this.reset();setTimeout(()=>document.getElementById('qSuccess').style.display='none',4000);});
+        document.getElementById('mailboxForm').addEventListener('submit',function(e){e.preventDefault();document.getElementById('mSuccess').style.display='block';this.reset();setTimeout(()=>document.getElementById('mSuccess').style.display='none',4000);});
+
+        // ===== Scroll Reveal =====
+        const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+        document.querySelectorAll('.card,.timeline__item,.project__embed-card,.avatar-section').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity 0.6s ease,transform 0.6s ease';obs.observe(el);});
+
+        // ===== Ripple =====
+        document.addEventListener('click',e=>{const r=document.createElement('div');r.className='ripple-effect';r.style.left=(e.clientX-10)+'px';r.style.top=(e.clientY-10)+'px';r.style.width='20px';r.style.height='20px';document.body.appendChild(r);setTimeout(()=>r.remove(),1000);});
+
+        // ✅ Liverpool KOP Modal Interaction
+        const kopModal = document.getElementById('kopModal');
+        const kopClose = document.getElementById('kopClose');
+        const footballTag = document.getElementById('footballTag');
+
+        footballTag.addEventListener('click', () => kopModal.classList.add('is-open'));
+        kopClose.addEventListener('click', () => kopModal.classList.remove('is-open'));
+        kopModal.addEventListener('click', (e) => {
+            if (e.target === kopModal) kopModal.classList.remove('is-open');
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') kopModal.classList.remove('is-open');
+        });
+
+        console.log('%c👋 Hi! 我是律照楠','font-size:20px;font-weight:bold;color:#007AFF;');
+        console.log('%c数字分身由 DeepSeek 驱动 | 网站用 Vibe Coding 构建','font-size:12px;color:#6E6E73;');
+    </script>
+</body>
+</html>
