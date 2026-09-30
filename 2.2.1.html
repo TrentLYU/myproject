@@ -888,10 +888,10 @@
             .fb-star { font-size: 1.7rem; }
         }
 
-        /* ===== 首次访问语言选择弹窗 ===== */
+        /* ===== 首次访问语言选择弹窗（底部抽屉式 Bottom Sheet） ===== */
         .lang-modal-overlay {
             position: fixed; inset: 0; z-index: 99999;
-            display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: flex-end; justify-content: center;
             background: rgba(242,242,247,0.72);
             backdrop-filter: blur(24px) saturate(180%);
             -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -899,29 +899,38 @@
         }
         .lang-modal-overlay[hidden] { display: none; }
         .lang-modal {
-            width: 400px; max-width: 92vw; padding: 36px 32px 32px;
-            border-radius: 28px; text-align: center;
-            border: 1px solid var(--glass-border);
+            width: min(600px, 100%);
+            padding: 14px 28px calc(26px + env(safe-area-inset-bottom, 0px));
+            border-radius: 26px 26px 0 0; text-align: center;
+            border: 1px solid var(--glass-border); border-bottom: none;
             background: var(--glass-bg-heavy);
             backdrop-filter: blur(30px) saturate(180%);
             -webkit-backdrop-filter: blur(30px) saturate(180%);
-            box-shadow: 0 24px 80px rgba(0,0,0,0.22);
-            animation: modalIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 -16px 60px rgba(0,0,0,0.20);
+            animation: sheetIn 0.55s cubic-bezier(0.32, 0.72, 0, 1);
         }
-        .lang-modal__icon { font-size: 2.4rem; margin-bottom: 10px; }
-        .lang-modal__title { font-size: 1.15rem; font-weight: 700; color: var(--text-primary); line-height: 1.5; }
-        .lang-modal__subtitle { margin-top: 6px; font-size: 0.82rem; color: var(--text-secondary); }
-        .lang-modal__btns { margin-top: 22px; display: flex; flex-direction: column; gap: 10px; }
+        @keyframes sheetIn { from { transform: translateY(70%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .lang-modal__grabber { width: 40px; height: 5px; border-radius: 100px; background: rgba(0,0,0,0.16); margin: 0 auto 18px; }
+        .lang-modal__icon { font-size: 2.2rem; margin-bottom: 8px; }
+        .lang-modal__title { font-size: 1.12rem; font-weight: 700; color: var(--text-primary); line-height: 1.5; }
+        .lang-modal__subtitle { margin-top: 6px; font-size: 0.8rem; color: var(--text-secondary); padding: 0 12px; line-height: 1.55; }
+        .lang-modal__btns { margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .lang-modal__btn {
-            display: flex; flex-direction: column; align-items: center; gap: 2px;
-            padding: 13px 18px; border-radius: 16px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+            min-height: 60px; padding: 12px 10px; border-radius: 16px;
             border: 1px solid var(--glass-border);
             background: rgba(255,255,255,0.6);
             cursor: pointer; transition: all 0.22s ease;
+            -webkit-tap-highlight-color: transparent;
         }
         .lang-modal__btn:hover { border-color: rgba(0,122,255,0.5); background: rgba(0,122,255,0.08); transform: translateY(-1px); }
-        .lang-modal__btn-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
-        .lang-modal__btn-desc { font-size: 0.76rem; color: var(--text-secondary); }
+        .lang-modal__btn-name { font-size: 0.98rem; font-weight: 700; color: var(--text-primary); }
+        .lang-modal__btn-desc { font-size: 0.72rem; color: var(--text-secondary); }
+        @media (max-width: 480px) {
+            .lang-modal__btns { grid-template-columns: 1fr; }
+            .lang-modal__btn { min-height: 54px; flex-direction: row; gap: 10px; }
+            .lang-modal__btn-desc { font-size: 0.74rem; }
+        }
 
         /* ===== Modals (Tahoe Style) ===== */
         .modal-overlay {
@@ -1192,6 +1201,10 @@
             .travel__stage { height: 480px; }
             .trent-modal { width: 350px; }
             .avatar-section { max-width: 90%; }
+            /* 2.2.1 iPad 强化：弹窗限宽居中（95vw 在 10 寸屏过宽）；触控目标略增 */
+            .modal-card { width: min(680px, 92vw); }
+            .music-btn { width: 34px; height: 34px; }
+            .music-btn--play { width: 38px; height: 38px; }
         }
 
         /* ---------- 手机竖屏（≤640px） ---------- */
@@ -1228,6 +1241,13 @@
             input, textarea, select { font-size: 16px; }
             .form__input, .form__textarea { padding: 12px 14px; }
 
+            /* 2.2.1 移动端强化：音乐按钮触控目标加大（Apple HIG ≥44px） */
+            .music-btn { width: 38px; height: 38px; font-size: 0.95rem; }
+            .music-btn--play { width: 44px; height: 44px; }
+            .music-player__controls { gap: 10px; }
+            /* 贴底音乐条为 footer 让出空间 */
+            body { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+
             /* Trent 弹窗：右侧停靠改为底部抽屉 */
             .trent-modal {
                 top: auto; bottom: 0; left: 0; right: 0;
@@ -1259,7 +1279,9 @@
             .fb-card { width: 94vw; max-height: 90vh; }
             .fb-card .fb-actions .btn { flex: 1; justify-content: center; padding: 12px 10px; }
             .fb-toast { bottom: calc(110px + env(safe-area-inset-bottom)); max-width: 88vw; text-align: center; }
-            .lang-modal { width: 86vw; padding: 28px 22px 24px; border-radius: 22px; }
+
+            /* 语言弹窗（底部抽屉在手机上全宽贴底） */
+            .lang-modal { width: 100%; border-radius: 0; border-left: none; border-right: none; }
 
             /* 表格类文本换行 */
             .edu-item, .project__desc, .fb-item__text { word-break: break-word; }
@@ -1912,6 +1934,7 @@
     <!-- 首次访问语言选择弹窗（仅首次打开时显示，之后可用右上角 🌐 随时切换） -->
     <div class="lang-modal-overlay" id="langModal" hidden>
         <div class="lang-modal">
+            <div class="lang-modal__grabber"></div>
             <div class="lang-modal__icon">🌐</div>
             <div class="lang-modal__title">请选择语言 · Choose your language · 請選擇語言</div>
             <div class="lang-modal__subtitle">之后可随时用右上角 🌐 按钮切换 · Top-right 🌐 menu to switch anytime</div>

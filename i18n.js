@@ -136,14 +136,21 @@
         });
     }
 
-    // ---------- 首次访问：语言选择弹窗 ----------
+    // ---------- 首次访问：语言选择弹窗（底部抽屉，进入网站后稍候弹出） ----------
     function wireLangModal() {
         var modal = document.getElementById('langModal');
         if (!modal) return;
         var saved = null;
         try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
         if (saved && HTML_LANG[saved]) { modal.hidden = true; return; } // 已选择过，不再打扰
-        modal.hidden = false;
+        // 首屏渲染完成后再从底部滑出（约 0.6s），避免与页面加载争抢注意力
+        modal.hidden = true;
+        setTimeout(function () {
+            var still = null;
+            try { still = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+            if (still && HTML_LANG[still]) return; // 等待期间已通过右上角切换
+            modal.hidden = false;
+        }, 600);
         var btns = modal.querySelectorAll('[data-lang]');
         for (var i = 0; i < btns.length; i++) {
             btns[i].addEventListener('click', function () {
