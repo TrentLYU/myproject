@@ -5,6 +5,25 @@
 
 ---
 
+## 演进史入口强化 + iframe 修复 — 2026-09-24 第二次提交（版本号维持 2.2.1）
+
+**主站演进史展示横幅（项目区 ↔ Trent Intelligence 之间）**
+- 新增蓝色渐变大横幅：📚 图标 + 标题 + 一句话演进总结（9 天 4 代 23 版）+ "查看演进史 →" 胶囊按钮；悬停浮起、按钮反色动效；≤640px 自动竖排居中。
+- i18n 新增 3 键 × 3 语言（`history.bannerTitle/Desc/Cta`）。
+
+**演进史页面**
+- 删除页底"归档说明"黄条（API Key 脱敏等技术备注移入 CHANGELOG 与提交记录）；同步清理无引用的 `.note` 样式。
+
+**修复：项目区 3D VR iframe 404（既有 bug）**
+- `assets/3D VR 1pro version.html` → `3D VR 1pro version.html`；`assets/3D VR 1.1version (heating process).html` → `3D VR 1.1version（heating process）.html`（根目录实际文件名为全角括号）。两处 iframe 此前在线上均为 404 空白，现已可加载。
+
+**验证**
+- DOM 顺序：项目区 → 演进史横幅 → Trent Intelligence ✓；横幅三语键/CSS/响应式注入 ✓。
+- 两个 3D VR 文件本地 HTTP 200；`src="assets/` 残留清零。
+- 演进史页面"归档说明"已移除，四代内容完整。
+
+---
+
 ## 网站演进史 + 历史版本归档 — 2026-09-24（版本号维持 2.2.1）
 
 > 新增 `history/` 归档体系与演进史页面；主站导航/页脚加入口。纯新增模块，主版本文件不变。

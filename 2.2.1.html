@@ -329,6 +329,39 @@
         }
         .project__embed-desc { padding: 20px 32px; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; background: rgba(255,255,255,0.3); }
 
+        /* ===== Site History Banner (projects ↔ Trent Intelligence) ===== */
+        .history-banner {
+            display: flex; align-items: center; gap: 24px;
+            background: linear-gradient(120deg, #003d7d 0%, #0066CC 55%, #00a0e9 100%);
+            border-radius: 22px; padding: 28px 32px;
+            color: #fff; text-decoration: none;
+            box-shadow: 0 12px 32px rgba(0, 102, 204, 0.28);
+            transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.25s;
+            position: relative; overflow: hidden;
+        }
+        .history-banner::after {
+            content: ""; position: absolute; right: -70px; top: -70px;
+            width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.09);
+        }
+        .history-banner::before {
+            content: ""; position: absolute; left: -50px; bottom: -90px;
+            width: 180px; height: 180px; border-radius: 50%; background: rgba(255,255,255,0.06);
+        }
+        .history-banner:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 18px 44px rgba(0, 102, 204, 0.38); }
+        .history-banner__icon { font-size: 2.7rem; line-height: 1; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.22)); position: relative; z-index: 1; }
+        .history-banner__text { flex: 1; min-width: 0; position: relative; z-index: 1; }
+        .history-banner__title { font-size: 1.32rem; font-weight: 700; margin-bottom: 5px; letter-spacing: 0.01em; }
+        .history-banner__desc { font-size: 0.93rem; opacity: 0.94; line-height: 1.55; }
+        .history-banner__cta {
+            flex-shrink: 0; background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.4);
+            padding: 11px 22px; border-radius: 100px;
+            font-size: 0.92rem; font-weight: 600; white-space: nowrap;
+            transition: background 0.25s, color 0.25s;
+            position: relative; z-index: 1;
+        }
+        .history-banner:hover .history-banner__cta { background: #fff; color: #0066CC; }
+
         /* ===== Avatar / AI Chat ===== */
         .avatar-section { max-width: 800px; margin: 0 auto; text-align: center; }
         .avatar-container { position: relative; width: 180px; height: 180px; margin: 0 auto 40px; }
@@ -1141,6 +1174,9 @@
             .travel-pin { width: 38px; height: 38px; }
             .place-photos img { height: 180px; }
             .place-photos .place-video-tile { height: 180px; width: 240px; }
+            /* Site History Banner 手机竖排居中 */
+            .history-banner { flex-direction: column; text-align: center; gap: 14px; padding: 26px 22px; }
+            .history-banner__desc { font-size: 0.85rem; }
         }
 
         /* ================= 2.2.0 三端适配 ================= */
@@ -1423,7 +1459,7 @@
                     </div>
                 </div>
                 <div class="project__iframe-wrapper">
-                    <iframe id="vr1proIframe" src="assets/3D VR 1pro version.html" title="3D VR 1 Pro Version" loading="lazy"></iframe>
+                    <iframe id="vr1proIframe" src="3D VR 1pro version.html" title="3D VR 1 Pro Version" loading="lazy"></iframe>
                 </div>
                 <div class="project__embed-desc" data-i18n="proj.vrProDesc">AI for Separation 项目的 3D VR 可视化成果（Pro 版本）。支持交互式三维浏览，展示分离过程的空间结构。</div>
             </div>
@@ -1442,11 +1478,23 @@
                     </div>
                 </div>
                 <div class="project__iframe-wrapper">
-                    <iframe id="vr11Iframe" src="assets/3D VR 1.1version (heating process).html" title="3D VR 1.1 Heating Process" loading="lazy"></iframe>
+                    <iframe id="vr11Iframe" src="3D VR 1.1version（heating process）.html" title="3D VR 1.1 Heating Process" loading="lazy"></iframe>
                 </div>
                 <div class="project__embed-desc" data-i18n="proj.vr11Desc">加热过程的 3D VR 可视化演示。展示分离过程中热力学变化的三维动态效果，是 1.0 版本的迭代升级。</div>
             </div>
         </div>
+    </section>
+
+    <!-- Site History Banner -->
+    <section class="section" id="site-history">
+        <a class="history-banner" href="history/">
+            <div class="history-banner__icon">📚</div>
+            <div class="history-banner__text">
+                <h3 class="history-banner__title" data-i18n="history.bannerTitle">网站演进史</h3>
+                <p class="history-banner__desc" data-i18n="history.bannerDesc">从 84KB 的 AI 原型，到 160KB 的三语 · 三端 · 云端个人主页 —— 9 天 4 代 23 版，每一步都留档可访问</p>
+            </div>
+            <span class="history-banner__cta" data-i18n="history.bannerCta">查看演进史 →</span>
+        </a>
     </section>
 
     <!-- Avatar / AI -->
