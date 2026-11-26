@@ -8,6 +8,7 @@
     const mainHistory = [];
     const popupHistory = [];
     let serviceOnline = null;
+    let accessCode = '';
 
     function t(key) {
         return window.I18n ? window.I18n.t(key) : key;
@@ -25,6 +26,14 @@
         }
     }
 
+    function ensureAccessCode() {
+        if (accessCode) return accessCode;
+        const value = window.prompt(t('chat.accessPrompt'), '');
+        if (value === null || !value.trim()) throw new ChatError('ACCESS_CODE_CANCELLED', 0);
+        accessCode = value.trim();
+        return accessCode;
+    }
+
     async function readJson(response) {
         try {
             return await response.json();
@@ -35,6 +44,7 @@
 
     async function request(messages) {
         if (!endpoint) throw new ChatError('SERVICE_NOT_CONFIGURED', 503);
+        ensureAccessCode();
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeoutMs);
         try {
@@ -43,12 +53,14 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     messages: messages.slice(-12),
-                    language: language()
+                    language: language(),
+                    accessCode
                 }),
                 signal: controller.signal
             });
             const data = await readJson(response);
             if (!response.ok) {
+                if (data?.error === 'INVALID_ACCESS_CODE') accessCode = '';
                 throw new ChatError(data?.error || 'UPSTREAM_UNAVAILABLE', response.status);
             }
             if (!data || typeof data.reply !== 'string' || !data.reply.trim()) {
@@ -90,12 +102,27 @@
     function errorText(error) {
         const code = error?.code || '';
         if (code === 'RATE_LIMITED') return t('chat.rateLimited');
-        if (code === 'SERVICE_NOT_CONFIGURED') return t('chat.serviceUnavailable');
+        if (code === 'IP_DAILY_LIMIT') return t('chat.ipDailyLimit');
+        if (code === 'GLOBAL_DAILY_LIMIT') return t('chat.globalDailyLimit');
+        if (code === 'INVALID_ACCESS_CODE') return t('chat.accessInvalid');
+        if (code === 'ACCESS_CODE_CANCELLED') return t('chat.accessCancelled');
+        if (code === 'QUOTA_UNAVAILABLE') return t('chat.quotaUnavailable');
+        if (code === 'SERVICE_NOT_CONFIGURED' || code === 'SERVICE_DISABLED') return t('chat.serviceUnavailable');
         if (code === 'UPSTREAM_TIMEOUT' || code === 'LOCAL_TIMEOUT') return t('chat.timeout');
         if (code === 'ORIGIN_NOT_ALLOWED') return t('chat.originDenied');
         if (code === 'NETWORK_ERROR') return t('chat.netFail');
         if (error?.status) return t('chat.reqFail').replace('%{status}', error.status);
         return t('chat.netFail');
+    }
+
+    function markServiceOfflineIfNeeded(error) {
+        const visitorErrors = [
+            'INVALID_ACCESS_CODE', 'ACCESS_CODE_CANCELLED', 'RATE_LIMITED',
+            'IP_DAILY_LIMIT', 'GLOBAL_DAILY_LIMIT'
+        ];
+        if (visitorErrors.includes(error?.code)) return;
+        serviceOnline = false;
+        updateServiceStatus();
     }
 
     function updateServiceStatus() {
@@ -169,8 +196,7 @@
                 addMessage(data.reply.trim(), false);
             } catch (error) {
                 mainHistory.pop();
-                serviceOnline = false;
-                updateServiceStatus();
+                markServiceOfflineIfNeeded(error);
                 addMessage(errorText(error), false);
             } finally {
                 removeTyping();
@@ -244,8 +270,7 @@
                 addMessage(data.reply.trim(), false);
             } catch (error) {
                 popupHistory.pop();
-                serviceOnline = false;
-                updateServiceStatus();
+                markServiceOfflineIfNeeded(error);
                 addMessage(errorText(error), false);
             } finally {
                 removeTyping();

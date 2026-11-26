@@ -7,6 +7,7 @@ const page = readFileSync(new URL('../2.2.1.html', import.meta.url), 'utf8');
 const client = readFileSync(new URL('../trent-ai.js', import.meta.url), 'utf8');
 const config = readFileSync(new URL('../trent-chat-config.js', import.meta.url), 'utf8');
 const dictionarySource = readFileSync(new URL('../i18n-dict.js', import.meta.url), 'utf8');
+const quotaMigration = readFileSync(new URL('../supabase/migrations/20261126150000_trent_chat_quota.sql', import.meta.url), 'utf8');
 
 const context = { window: {} };
 vm.createContext(context);
@@ -28,6 +29,9 @@ test('两个聊天入口都接入统一的真实 API 客户端', () => {
     assert.match(client, /wirePopupChat\(\)/);
     assert.match(client, /method:\s*'POST'/);
     assert.match(client, /messages:\s*messages\.slice\(-12\)/);
+    assert.match(client, /accessCode/);
+    assert.match(client, /window\.prompt\(t\('chat\.accessPrompt'\)/);
+    assert.doesNotMatch(client, /localStorage|sessionStorage|document\.cookie/);
     assert.match(config, /supabase\.co\/functions\/v1\/trent-chat/);
 });
 
@@ -44,6 +48,8 @@ test('三种语言都包含完整的聊天状态和错误文案', () => {
     const keys = [
         'chat.disclosure', 'chat.disclosureShort', 'chat.checking', 'chat.offline',
         'chat.statusOffline', 'chat.rateLimited', 'chat.serviceUnavailable',
+        'chat.accessPrompt', 'chat.accessInvalid', 'chat.accessCancelled',
+        'chat.ipDailyLimit', 'chat.globalDailyLimit', 'chat.quotaUnavailable',
         'chat.timeout', 'chat.originDenied', 'chat.reqFail', 'chat.netFail'
     ];
     for (const lang of ['zh', 'tw', 'en']) {
@@ -56,6 +62,14 @@ test('三种语言都包含完整的聊天状态和错误文案', () => {
             assert.equal(dictionary[lang][obsolete], undefined, `${lang}:${obsolete} should be removed`);
         }
     }
+});
+
+test('数据库硬限额启用 RLS、原子锁并只授权 service_role 执行', () => {
+    assert.match(quotaMigration, /enable row level security/i);
+    assert.match(quotaMigration, /pg_advisory_xact_lock/i);
+    assert.match(quotaMigration, /revoke all on function[\s\S]*from public, anon, authenticated/i);
+    assert.match(quotaMigration, /grant execute on function[\s\S]*to service_role/i);
+    assert.doesNotMatch(quotaMigration, /create table[\s\S]*\bip\s+text\b/i);
 });
 
 test('前端文件不包含疑似 DeepSeek 私钥', () => {

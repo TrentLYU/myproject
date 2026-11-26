@@ -5,6 +5,9 @@ export const DEFAULT_API_URL = 'https://api.deepseek.com/chat/completions';
 export const MAX_MESSAGE_CHARS = 500;
 export const MAX_MESSAGES = 12;
 export const MAX_TOTAL_CHARS = 6000;
+export const DEFAULT_MAX_OUTPUT_TOKENS = 256;
+export const DEFAULT_GLOBAL_DAILY_LIMIT = 100;
+export const DEFAULT_IP_DAILY_LIMIT = 10;
 
 const DEFAULT_ORIGINS = ['https://trentlyu.github.io'];
 const rateBuckets = new Map();
@@ -75,6 +78,68 @@ function consumeRateLimit(request, env) {
         ok: bucket.count <= limit,
         retryAfter: Math.max(1, Math.ceil((bucket.startedAt + windowMs - now) / 1000))
     };
+}
+
+function positiveInteger(value, fallback) {
+    const number = Number(value);
+    return Number.isInteger(number) && number >= 0 ? number : fallback;
+}
+
+async function sha256(value) {
+    const bytes = new TextEncoder().encode(value);
+    return new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256', bytes));
+}
+
+export async function isAccessCodeValid(provided, expected) {
+    if (typeof provided !== 'string' || typeof expected !== 'string' || !expected) return false;
+    const candidate = provided.trim();
+    if (!candidate || candidate.length > 128) return false;
+    const [left, right] = await Promise.all([sha256(candidate), sha256(expected)]);
+    let difference = 0;
+    for (let index = 0; index < left.length; index += 1) {
+        difference |= left[index] ^ right[index];
+    }
+    return difference === 0;
+}
+
+function serviceConfigured(env) {
+    const quotaConfigured = typeof env.consumeQuota === 'function'
+        || Boolean(env.supabaseUrl && env.supabaseServiceRoleKey);
+    return Boolean(env.apiKey && env.accessCode && quotaConfigured && env.chatEnabled !== false);
+}
+
+async function clientFingerprint(request, env) {
+    const hash = await sha256(`${env.supabaseServiceRoleKey || env.accessCode}|${clientKey(request)}`);
+    return Array.from(hash, (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+export async function consumePersistentQuota(request, env) {
+    const fetchImpl = env.quotaFetchImpl || env.fetchImpl || globalThis.fetch;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), Number(env.quotaTimeoutMs) || 5000);
+    try {
+        const response = await fetchImpl(`${env.supabaseUrl.replace(/\/$/, '')}/rest/v1/rpc/consume_trent_chat_quota`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': env.supabaseServiceRoleKey,
+                'Authorization': `Bearer ${env.supabaseServiceRoleKey}`
+            },
+            body: JSON.stringify({
+                p_client_id: await clientFingerprint(request, env),
+                p_ip_minute_limit: positiveInteger(env.rateLimit, 10),
+                p_ip_daily_limit: positiveInteger(env.ipDailyLimit, DEFAULT_IP_DAILY_LIMIT),
+                p_global_daily_limit: positiveInteger(env.globalDailyLimit, DEFAULT_GLOBAL_DAILY_LIMIT)
+            }),
+            signal: controller.signal
+        });
+        if (!response.ok) throw new Error('QUOTA_RPC_FAILED');
+        const result = await response.json();
+        if (!result || typeof result.ok !== 'boolean') throw new Error('INVALID_QUOTA_RESPONSE');
+        return result;
+    } finally {
+        clearTimeout(timeout);
+    }
 }
 
 export function validateChatPayload(payload) {
@@ -153,10 +218,11 @@ export async function handleChatRequest(request, env = {}) {
     }
 
     if (request.method === 'GET') {
-        const configured = Boolean(env.apiKey);
+        const configured = serviceConfigured(env);
         return json(configured ? 200 : 503, {
-            status: configured ? 'ok' : 'not_configured',
+            status: configured ? 'ok' : (env.chatEnabled === false ? 'disabled' : 'not_configured'),
             model: env.model || DEFAULT_MODEL,
+            accessRequired: true,
             requestId: id
         }, origin);
     }
@@ -165,7 +231,11 @@ export async function handleChatRequest(request, env = {}) {
         return json(405, { error: 'METHOD_NOT_ALLOWED', requestId: id }, origin, { Allow: 'POST, GET, OPTIONS' });
     }
 
-    if (!env.apiKey) {
+    if (env.chatEnabled === false) {
+        return json(503, { error: 'SERVICE_DISABLED', requestId: id }, origin);
+    }
+
+    if (!serviceConfigured(env)) {
         return json(503, { error: 'SERVICE_NOT_CONFIGURED', requestId: id }, origin);
     }
 
@@ -188,9 +258,30 @@ export async function handleChatRequest(request, env = {}) {
         return json(400, { error: 'INVALID_JSON', requestId: id }, origin);
     }
 
+    if (!await isAccessCodeValid(payload?.accessCode, env.accessCode)) {
+        return json(401, { error: 'INVALID_ACCESS_CODE', requestId: id }, origin);
+    }
+
     const built = buildModelMessages(payload);
     if (!built.ok) {
         return json(400, { error: built.code, requestId: id }, origin);
+    }
+
+    let quota;
+    try {
+        const consumeQuota = env.consumeQuota || consumePersistentQuota;
+        quota = await consumeQuota(request, env);
+    } catch {
+        return json(503, { error: 'QUOTA_UNAVAILABLE', requestId: id }, origin);
+    }
+    if (!quota?.ok) {
+        const code = ['RATE_LIMITED', 'IP_DAILY_LIMIT', 'GLOBAL_DAILY_LIMIT'].includes(quota?.code)
+            ? quota.code
+            : 'QUOTA_UNAVAILABLE';
+        const limited = code !== 'QUOTA_UNAVAILABLE';
+        return json(limited ? 429 : 503, { error: code, requestId: id }, origin, limited ? {
+            'Retry-After': String(Math.max(1, Number(quota.retryAfter) || 60))
+        } : {});
     }
 
     const fetchImpl = env.fetchImpl || globalThis.fetch;
@@ -208,7 +299,7 @@ export async function handleChatRequest(request, env = {}) {
             body: JSON.stringify({
                 model,
                 messages: built.messages,
-                max_tokens: 400,
+                max_tokens: Math.max(1, positiveInteger(env.maxOutputTokens, DEFAULT_MAX_OUTPUT_TOKENS)),
                 temperature: 0.3,
                 top_p: 0.9,
                 stream: false
