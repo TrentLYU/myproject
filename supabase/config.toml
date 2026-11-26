@@ -1,0 +1,4 @@
+project_id = "vaqnkidkablxyuryrsxi"
+
+[functions.trent-chat]
+verify_jwt = false

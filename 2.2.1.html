@@ -410,6 +410,11 @@
         }
         .avatar-chat__name { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
         .avatar-chat__status-text { font-size: 0.75rem; color: #34C759; font-weight: 500; }
+        .avatar-chat__notice {
+            padding: 8px 24px; font-size: 0.72rem; line-height: 1.5; text-align: center;
+            color: var(--text-secondary); background: rgba(0,122,255,0.05);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
 
         .avatar-chat__messages {
             flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
@@ -628,6 +633,11 @@
             content:''; display:inline-block; width:7px; height:7px; border-radius:50%;
             background:#30D158; box-shadow:0 0 6px #30D158; margin-right:5px; animation: blink 2s infinite;
         }
+        .trent-modal__notice {
+            padding: 7px 16px; font-size: 0.68rem; text-align: center;
+            color: rgba(255,255,255,0.55); background: rgba(255,255,255,0.035);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
         .trent-modal__messages {
             flex: 1; overflow-y: auto; padding: 18px 16px;
             display: flex; flex-direction: column; gap: 12px;
@@ -687,6 +697,7 @@
             transition: all 0.3s ease;
         }
         .trent-modal__send:hover { transform: scale(1.05); box-shadow: 0 6px 18px rgba(191,90,242,0.50); }
+        .trent-modal__send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
         @keyframes trentIn { from { opacity: 0; transform: translateY(-50%) translateX(60px); } to { opacity: 1; transform: translateY(-50%) translateX(0); } }
         @keyframes breatheSoft {
@@ -1294,6 +1305,11 @@
             .fb-card { max-height: 94vh; }
         }
 
+        /* 触摸设备横屏也会遇到浏览器底栏；不能只按宽度 ≤640px 抬高反馈入口 */
+        @media (hover: none) and (pointer: coarse) {
+            .fb-corner { bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
+        }
+
     </style>
 </head>
 <body>
@@ -1542,11 +1558,12 @@
                         <div class="avatar-chat__status-text" data-i18n="chat.online">● 在线</div>
                     </div>
                 </div>
-                <div class="avatar-chat__messages" id="avatarMessages">
+                <div class="avatar-chat__notice" data-i18n="chat.disclosure">AI 数字分身 · 基于已核对个人资料回答 · 无需填写 API Key</div>
+                <div class="avatar-chat__messages" id="avatarMessages" role="log" aria-live="polite">
                     <div class="avatar-msg avatar-msg--bot" data-i18n="chat.greeting">👋 你好！我是Trent Intelligence，由 DeepSeek 大模型驱动。你可以问我关于我的学习、项目、兴趣的任何问题！</div>
                 </div>
                 <div class="avatar-chat__input-row">
-                    <input type="text" class="avatar-chat__input" id="avatarInput" placeholder="输入你想问的问题..." data-i18n-ph="chat.inputPh" autocomplete="off">
+                    <input type="text" class="avatar-chat__input" id="avatarInput" maxlength="500" placeholder="输入你想问的问题..." data-i18n-ph="chat.inputPh" autocomplete="off">
                     <button class="avatar-chat__send" id="avatarSendBtn" data-i18n="chat.send">发送</button>
                 </div>
             </div>
@@ -1753,7 +1770,8 @@
                         <div class="trent-modal__status" data-i18n="trent.status">在线 · 随便问关于 Trent 的事</div>
                     </div>
                 </div>
-                <div class="trent-modal__messages" id="trentMessages">
+                <div class="trent-modal__notice" data-i18n="chat.disclosureShort">真实大模型对话 · 回答由 AI 生成</div>
+                <div class="trent-modal__messages" id="trentMessages" role="log" aria-live="polite">
                     <div class="trent-msg trent-msg--bot" id="trentGreeting" data-i18n="trent.greeting">嗨，我是 Trent ✨ 律照楠的数字分身。关于我的学校、研究、爱好和梦想，想知道什么都可以问我哦～</div>
                 </div>
                 <div class="trent-modal__chips" id="trentChips" data-i18n-chips="trent.chip" data-i18n-chips-class="trent-chip">
@@ -1763,7 +1781,7 @@
                     <button class="trent-chip">他的梦想是什么？</button>
                 </div>
                 <div class="trent-modal__inputrow">
-                    <input type="text" class="trent-modal__input" id="trentInput" placeholder="想问 Trent 什么？" data-i18n-ph="trent.inputPh" autocomplete="off">
+                    <input type="text" class="trent-modal__input" id="trentInput" maxlength="500" placeholder="想问 Trent 什么？" data-i18n-ph="trent.inputPh" autocomplete="off">
                     <button class="trent-modal__send" id="trentSendBtn" data-i18n="trent.send">发送</button>
                 </div>
             </div>
@@ -1959,10 +1977,9 @@
     <script src="i18n-dict.js"></script>
     <script src="i18n.js"></script>
 
-    <!-- Trent 知识库：trent-knowledge.js 是简中源文件（可直接编辑）；en/tw 为翻译文件，勿改顺序 -->
-    <script src="trent-knowledge.js"></script>
-    <script src="trent-knowledge.en.js"></script>
-    <script src="trent-knowledge.tw.js"></script>
+    <!-- 数字分身：公开函数配置 + 双入口共用客户端；个人资料和密钥仅存在服务端 -->
+    <script src="trent-chat-config.js"></script>
+    <script src="trent-ai.js"></script>
 
     <!-- 旅行地球：点阵数据 + 地点配置（照片放 travel/ 文件夹，编辑 travel-places.js）+ 渲染逻辑 -->
     <script src="globe-data.js"></script>
@@ -2042,170 +2059,7 @@
             window.addEventListener('trent-langchange', updateUI);
         })();
 
-        // ===== DeepSeek Chat =====
-        const CHAT_URL = 'https://api.deepseek.com/chat/completions';
-        
-        function getApiKey() {
-            return localStorage.getItem('deepseek_api_key') || '';
-        }
-
-        // 系统提示词按语言实时取词（英语/繁中提示词会让 AI 直接用对应语言回答）
-        function systemPrompt() { return T('chat.systemPrompt'); }
-
-        let chatHistory = [{ role: 'system', content: systemPrompt() }];
-        window.addEventListener('trent-langchange', function () {
-            chatHistory[0] = { role: 'system', content: systemPrompt() };
-        });
-        const messagesContainer = document.getElementById('avatarMessages');
-        const inputField = document.getElementById('avatarInput');
-        const sendBtn = document.getElementById('avatarSendBtn');
-
-        (function injectSettingsButton() {
-            const inputRow = document.querySelector('.avatar-chat__input-row');
-            if (!inputRow) return;
-            
-            const settingsDiv = document.createElement('div');
-            settingsDiv.style.cssText = 'padding: 8px 24px 0; text-align: center; background: rgba(255,255,255,0.6);';
-            settingsDiv.innerHTML = `
-                <button id="setApiKeyBtn" style="
-                    font-size: 12px; opacity: 0.6; border: none; background: none; 
-                    cursor: pointer; color: var(--text-secondary); padding: 4px 8px;
-                    transition: all 0.3s ease;
-                ">${T('chat.setKey')}</button>
-                <span id="apiKeyStatus" style="font-size:11px; margin-left:8px; opacity:0;"></span>
-            `;
-            inputRow.parentNode.insertBefore(settingsDiv, inputRow);
-
-            function updateStatus() {
-                const statusEl = document.getElementById('apiKeyStatus');
-                const btnEl = document.getElementById('setApiKeyBtn');
-                if (getApiKey()) {
-                    statusEl.textContent = T('chat.keySet');
-                    statusEl.style.color = '#34C759';
-                    statusEl.style.opacity = '1';
-                    btnEl.style.opacity = '0.4';
-                } else {
-                    statusEl.textContent = T('chat.keyUnset');
-                    statusEl.style.color = '#FF9500';
-                    statusEl.style.opacity = '1';
-                    btnEl.style.opacity = '0.8';
-                }
-            }
-            updateStatus();
-            window.addEventListener('trent-langchange', updateStatus);
-
-            document.getElementById('setApiKeyBtn').addEventListener('click', () => {
-                const overlay = document.createElement('div');
-                overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.3s ease;';
-        
-                const card = document.createElement('div');
-                card.style.cssText = 'background:#fff;border-radius:20px;padding:32px;width:400px;max-width:90vw;box-shadow:0 24px 80px rgba(0,0,0,0.3);text-align:center;';
-                card.innerHTML = `
-                <h3 style="margin:0 0 8px;font-size:1.2rem;color:#1D1D1F;">${T('chat.keyModalTitle')}</h3>
-                <p style="margin:0 0 20px;font-size:0.85rem;color:#6E6E73;">${T('chat.keyModalDesc')}</p>
-                <input id="apiKeyInput" type="password" placeholder="sk-..." style="width:100%;padding:14px 18px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);font-size:0.95rem;outline:none;margin-bottom:16px;box-sizing:border-box;" />
-                <div style="display:flex;gap:12px;justify-content:center;">
-                <button id="apiKeyCancel" style="padding:12px 24px;border-radius:100px;border:1px solid rgba(0,0,0,0.1);background:#fff;cursor:pointer;font-size:0.9rem;">${T('chat.cancel')}</button>
-                <button id="apiKeyConfirm" style="padding:12px 24px;border-radius:100px;border:none;background:#007AFF;color:#fff;cursor:pointer;font-size:0.9rem;font-weight:600;">${T('chat.save')}</button>
-                </div>
-                `;
-                
-                overlay.appendChild(card);
-                document.body.appendChild(overlay);
-                
-                setTimeout(() => document.getElementById('apiKeyInput').focus(), 100);
-                
-                function closeModal() { overlay.remove(); }
-                
-                document.getElementById('apiKeyConfirm').addEventListener('click', () => {
-                    const key = document.getElementById('apiKeyInput').value.trim();
-                    if (key) {
-                        localStorage.setItem('deepseek_api_key', key);
-                        updateStatus();
-                        closeModal();
-                        addMessage(T('chat.keySaved'), false);
-                    } else {
-                        document.getElementById('apiKeyInput').style.borderColor = '#FF3B30';
-                        document.getElementById('apiKeyInput').setAttribute('placeholder', T('chat.keyInvalid'));
-                    }
-                });
-                
-                document.getElementById('apiKeyCancel').addEventListener('click', closeModal);
-                overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
-                
-                document.getElementById('apiKeyInput').addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') document.getElementById('apiKeyConfirm').click();
-                });
-                
-                const escHandler = (e) => { if (e.key === 'Escape') { closeModal(); document.removeEventListener('keydown', escHandler); } };
-                document.addEventListener('keydown', escHandler);
-            });
-        })();
-
-        function addMessage(text, isUser) {
-            const msg = document.createElement('div');
-            msg.className = `avatar-msg ${isUser ? 'avatar-msg--user' : 'avatar-msg--bot'}`;
-            msg.textContent = text;
-            messagesContainer.appendChild(msg);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-        function showTyping() {
-            if (document.getElementById('typingIndicator')) return;
-            const t = document.createElement('div');
-            t.className = 'typing-indicator'; t.id = 'typingIndicator';
-            t.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-            messagesContainer.appendChild(t);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-        function removeTyping() { const t = document.getElementById('typingIndicator'); if (t) t.remove(); }
-        function setSending(v) {
-            sendBtn.disabled = v; inputField.disabled = v;
-            sendBtn.textContent = v ? T('chat.thinking') : T('chat.send');
-        }
-
-        async function sendAvatarMsg() {
-            const text = inputField.value.trim();
-            if (!text) return;
-
-            const apiKey = getApiKey();
-            if (!apiKey) {
-                addMessage(T('chat.noKey'), false);
-                return;
-            }
-
-            addMessage(text, true); inputField.value = '';
-            setSending(true); showTyping();
-            chatHistory.push({ role: 'user', content: text });
-            try {
-                const res = await fetch(CHAT_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-                    body: JSON.stringify({ model: 'deepseek-chat', messages: chatHistory, max_tokens: 300, temperature: 0.7 })
-                });
-                removeTyping();
-                if (!res.ok) {
-                    console.error('API Error:', res.status);
-                    if (res.status === 401) {
-                        addMessage(T('chat.keyExpired'), false);
-                        localStorage.removeItem('deepseek_api_key');
-                    } else {
-                        addMessage(T('chat.reqFail').replace('%{status}', res.status), false);
-                    }
-                    chatHistory.pop(); setSending(false); return;
-                }
-                const data = await res.json();
-                const reply = data.choices[0].message.content;
-                chatHistory.push({ role: 'assistant', content: reply });
-                addMessage(reply, false);
-            } catch (e) {
-                removeTyping(); console.error('Fetch Error:', e);
-                addMessage(T('chat.netFail'), false);
-                chatHistory.pop();
-            }
-            setSending(false); inputField.focus();
-        }
-        sendBtn.addEventListener('click', sendAvatarMsg);
-        inputField.addEventListener('keypress', e => { if (e.key === 'Enter' && !sendBtn.disabled) sendAvatarMsg(); });
+        // 数字分身的两个入口统一由 trent-ai.js 接入服务端 DeepSeek 代理。
 
         // ===== 项目文件自动探测系统 =====
         const PROJECT_CANDIDATES = {
@@ -2459,98 +2313,7 @@
             requestAnimationFrame(tick);
         })();
 
-        // ===== Trent 问答弹窗 (右侧停靠 · 知识库外挂 trent-knowledge.js) =====
-        (function () {
-            const overlay = document.getElementById('trentOverlay');
-            const avatar = document.getElementById('floatingAvatar');
-            const closeBtn = document.getElementById('trentClose');
-            const sendBtn = document.getElementById('trentSendBtn');
-            const input = document.getElementById('trentInput');
-            const messages = document.getElementById('trentMessages');
-            const chips = document.getElementById('trentChips');
-            if (!overlay || !avatar || !messages) return;
-
-            // ---- 知识库外挂到 trent-knowledge*.js，按当前语言自动选择（i18n.js 提供 getTrentKB）----
-            function getKB() {
-                return (window.I18n && window.I18n.getTrentKB()) || window.TRENT_KNOWLEDGE || {};
-            }
-
-            function findAnswer(q) {
-                const kb = getKB();
-                const knowledge = Array.isArray(kb.entries) ? kb.entries : [];
-                const fallback = kb.fallback || "这个问题呀，我的知识库里还没有收录答案。去问问 Trent 本人吧，他会给你更棒的解答 ✨";
-                const s = String(q).toLowerCase();
-                let best = null, bestScore = 0;
-                for (const item of knowledge) {
-                    let score = 0;
-                    for (const kw of item.k) {
-                        if (s.indexOf(kw.toLowerCase()) !== -1) score += kw.length;   // 越具体的关键词权重越高
-                    }
-                    if (score > bestScore) { bestScore = score; best = item; }
-                }
-                return bestScore > 0 ? best.a : fallback;
-            }
-
-            // 暴露测试与扩展接口
-            window.__TRENT_TEST__ = { findAnswer, getKB };
-
-            // ---- 交互 ----
-            function openTrent() {
-                overlay.classList.add('is-open');
-                setTimeout(() => { if (input) input.focus(); }, 120);
-            }
-            function closeTrent() { overlay.classList.remove('is-open'); }
-
-            avatar.addEventListener('click', openTrent);
-            avatar.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openTrent(); }
-            });
-            closeBtn.addEventListener('click', closeTrent);
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeTrent();
-            });
-
-            function addMsg(text, isUser) {
-                const el = document.createElement('div');
-                el.className = 'trent-msg ' + (isUser ? 'trent-msg--user' : 'trent-msg--bot');
-                el.textContent = text;
-                messages.appendChild(el);
-                messages.scrollTop = messages.scrollHeight;
-            }
-            function showTyping() {
-                if (document.getElementById('trentTyping')) return;
-                const t = document.createElement('div');
-                t.className = 'trent-typing'; t.id = 'trentTyping';
-                t.innerHTML = '<span></span><span></span><span></span>';
-                messages.appendChild(t);
-                messages.scrollTop = messages.scrollHeight;
-            }
-            function removeTyping() {
-                const t = document.getElementById('trentTyping');
-                if (t) t.remove();
-            }
-
-            function ask(text) {
-                const q = String(text || '').trim();
-                if (!q) return;
-                addMsg(q, true);
-                if (input) input.value = '';
-                showTyping();
-                setTimeout(() => {
-                    removeTyping();
-                    addMsg(findAnswer(q), false);
-                }, 550 + Math.random() * 450);
-            }
-
-            sendBtn.addEventListener('click', () => ask(input ? input.value : ''));
-            if (input) input.addEventListener('keydown', (e) => { if (e.key === 'Enter') ask(input.value); });
-            if (chips) {
-                chips.addEventListener('click', (e) => {
-                    const chip = e.target && e.target.closest ? e.target.closest('.trent-chip') : null;
-                    if (chip) ask(chip.textContent);
-                });
-            }
-        })();
+        // 右侧悬浮 Trent 的交互与真实模型请求统一由 trent-ai.js 负责。
 
         // ===== Tabs =====
         document.querySelectorAll('.project__tab').forEach(tab => {
